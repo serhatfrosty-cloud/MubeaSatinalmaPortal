@@ -4,6 +4,26 @@
     ViewData["Title"] = "Mubea Satın Alma Portalı";
 
     bool kullaniciLoginMi = Context.Session.GetString("User") != null;
+
+    // Yetki hatası kontrolü (URL'den gelen error parametresi)
+    string errorParam = Context.Request.Query["error"];
+}
+
+<!-- YENİ: Yetki hatası mesajı -->
+@if (!string.IsNullOrEmpty(errorParam))
+{
+    if (errorParam == "unauthorized")
+    {
+        <div class="alert alert-danger text-center m-0">
+            ⚠️ Bu sayfayı görüntüleme yetkiniz bulunmamaktadır. Lütfen sistem yöneticinize başvurun.
+        </div>
+    }
+    else if (errorParam == "no_department")
+    {
+        <div class="alert alert-warning text-center m-0">
+            ⚠️ Departman bilginiz sistemde tanımlı değil. Lütfen sistem yöneticinize başvurun.
+        </div>
+    }
 }
 
 <!-- Talep kayıt başarılı mesajı -->

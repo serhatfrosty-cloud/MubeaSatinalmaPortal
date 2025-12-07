@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using MubeaSatinalmaPortal.Models;
+using MubeaSatinalmaPortal.Filters;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -21,14 +22,15 @@ namespace MubeaSatinalmaPortal.Controllers
         }
 
         [HttpGet]
+        [SessionAuthorize(MinLevel = 1)]  // ← YENİ: Raporları sadece yöneticiler görebilir
         public IActionResult Index(DateTime? baslangic, DateTime? bitis)
         {
-            // Login kontrolü
-            if (HttpContext.Session.GetString("User") == null)
-            {
-                TempData["LoginError"] = "Raporları görüntülemek için önce giriş yapmalısınız.";
-                return RedirectToAction("Index", "Home");
-            }
+            //// Login kontrolü
+            //if (HttpContext.Session.GetString("User") == null)
+            //{
+            //    TempData["LoginError"] = "Raporları görüntülemek için önce giriş yapmalısınız.";
+            //    return RedirectToAction("Index", "Home");
+            //}
 
             var liste = new List<RaporTalepViewModel>();
 
@@ -318,13 +320,14 @@ namespace MubeaSatinalmaPortal.Controllers
         // TEK TALEP İÇİN PDF ÖNİZLEME (HEADER DOLDURMA)
         // =========================================================
         [HttpGet]
+        [SessionAuthorize]  // ← YENİ
         public IActionResult TalepFormPdf(int id)
         {
-            if (HttpContext.Session.GetString("User") == null)
-            {
-                TempData["LoginError"] = "Raporu görüntülemek için önce giriş yapmalısınız.";
-                return RedirectToAction("Index", "Home");
-            }
+            //if (HttpContext.Session.GetString("User") == null)
+            //{
+            //    TempData["LoginError"] = "Raporu görüntülemek için önce giriş yapmalısınız.";
+            //    return RedirectToAction("Index", "Home");
+            //}
 
             // 1) DTO'dan veriyi çek
             var dto = RaporVerisiniGetir(id);

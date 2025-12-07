@@ -2,10 +2,14 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using MubeaSatinalmaPortal.Models;
+using MubeaSatinalmaPortal.Filters;
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
+using System.Threading.Tasks;
 using System.Globalization;
+
+
 
 namespace MubeaSatinalmaPortal.Controllers
 {
@@ -19,24 +23,25 @@ namespace MubeaSatinalmaPortal.Controllers
         }
 
         // 🔹 Yeni Talep No üret (MP00000001, MP00000002, ...)
-        private string GenerateNewTalepNo()
+        // 🔹 Yeni Talep No üret (MP00000001, MP00000002, ...)
+        private async Task<string> GenerateNewTalepNo()
         {
             string connStr = _config.GetConnectionString("MubeaDB");
             string lastTalepNo = null;
 
             using (SqlConnection conn = new SqlConnection(connStr))
             {
-                conn.Open();
+                await conn.OpenAsync(); // ← async
 
                 string query = @"
-                    SELECT TOP 1 TalepNo
-                    FROM TBL_SatinAlmaTalepHeader
-                    WHERE TalepNo LIKE 'MP%'
-                    ORDER BY TalepID DESC";
+            SELECT TOP 1 TalepNo
+            FROM TBL_SatinAlmaTalepHeader
+            WHERE TalepNo LIKE 'MP%'
+            ORDER BY TalepID DESC";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
-                    object result = cmd.ExecuteScalar();
+                    object result = await cmd.ExecuteScalarAsync(); // ← async
                     if (result != null && result != DBNull.Value)
                     {
                         lastTalepNo = result.ToString();
@@ -57,7 +62,8 @@ namespace MubeaSatinalmaPortal.Controllers
         }
 
         // 🔹 Combobox verilerini dolduran yardımcı metot
-        private void LoadDropDowns()
+        // 🔹 Combobox verilerini dolduran yardımcı metot
+        private async Task LoadDropDowns()
         {
             string connStr = _config.GetConnectionString("MubeaDB");
 
@@ -67,19 +73,19 @@ namespace MubeaSatinalmaPortal.Controllers
 
             using (SqlConnection conn = new SqlConnection(connStr))
             {
-                conn.Open();
+                await conn.OpenAsync(); // ← async
 
                 // Departman
                 string departmanQuery = @"
-                    SELECT DepartmanID, DepartmanKodu, DepartmanAciklamasi
-                    FROM TBL_Departman
-                    WHERE DepartmanStatus = 0
-                    ORDER BY DepartmanKodu";
+            SELECT DepartmanID, DepartmanKodu, DepartmanAciklamasi
+            FROM TBL_Departman
+            WHERE DepartmanStatus = 0
+            ORDER BY DepartmanKodu";
 
                 using (SqlCommand cmd = new SqlCommand(departmanQuery, conn))
-                using (SqlDataReader dr = cmd.ExecuteReader())
+                using (SqlDataReader dr = await cmd.ExecuteReaderAsync()) // ← async
                 {
-                    while (dr.Read())
+                    while (await dr.ReadAsync()) // ← async
                     {
                         departmanList.Add(new SelectListItem
                         {
@@ -91,15 +97,15 @@ namespace MubeaSatinalmaPortal.Controllers
 
                 // CostCenter
                 string costCenterQuery = @"
-                    SELECT CostCenterID, CostCenterCode, CostCenterDescription
-                    FROM TBL_CostCenter
-                    WHERE CostCenterStatus = 0
-                    ORDER BY CostCenterCode";
+            SELECT CostCenterID, CostCenterCode, CostCenterDescription
+            FROM TBL_CostCenter
+            WHERE CostCenterStatus = 0
+            ORDER BY CostCenterCode";
 
                 using (SqlCommand cmd = new SqlCommand(costCenterQuery, conn))
-                using (SqlDataReader dr = cmd.ExecuteReader())
+                using (SqlDataReader dr = await cmd.ExecuteReaderAsync()) // ← async
                 {
-                    while (dr.Read())
+                    while (await dr.ReadAsync()) // ← async
                     {
                         costCenterList.Add(new SelectListItem
                         {
@@ -111,15 +117,15 @@ namespace MubeaSatinalmaPortal.Controllers
 
                 // Hizmet Tipi
                 string hizmetQuery = @"
-                    SELECT HizmetID, HizmetKodu, HizmetAciklamasi
-                    FROM TBL_HizmetTipi
-                    WHERE HizmetStatus = 0
-                    ORDER BY HizmetKodu";
+            SELECT HizmetID, HizmetKodu, HizmetAciklamasi
+            FROM TBL_HizmetTipi
+            WHERE HizmetStatus = 0
+            ORDER BY HizmetKodu";
 
                 using (SqlCommand cmd = new SqlCommand(hizmetQuery, conn))
-                using (SqlDataReader dr = cmd.ExecuteReader())
+                using (SqlDataReader dr = await cmd.ExecuteReaderAsync()) // ← async
                 {
-                    while (dr.Read())
+                    while (await dr.ReadAsync()) // ← async
                     {
                         hizmetTipiList.Add(new SelectListItem
                         {
@@ -137,34 +143,31 @@ namespace MubeaSatinalmaPortal.Controllers
 
         // 🔹 GET: /Talep/Create
         [HttpGet]
-        public IActionResult Create()
+        [SessionAuthorize]  // ← YENİ: Sadece bu satırı ekledik!
+        public async Task<IActionResult> Create() // ← async Task<IActionResult>
         {
-            if (HttpContext.Session.GetString("User") == null)
-            {
-                TempData["LoginError"] = "Talep oluşturmak için önce giriş yapmalısınız.";
-                return RedirectToAction("Index", "Home");
-            }
+            // ❌ Artık bu kodlara gerek yok - silebiliriz:
+            // if (HttpContext.Session.GetString("User") == null)
+            // {
+            //     TempData["LoginError"] = "Talep oluşturmak için önce giriş yapmalısınız.";
+            //     return RedirectToAction("Index", "Home");
+            // }
 
-            ViewBag.TalepNo = GenerateNewTalepNo();
-            LoadDropDowns();
+            ViewBag.TalepNo = await GenerateNewTalepNo(); // ← await
+            await LoadDropDowns(); // ← await
             return View();
         }
 
         // 🔹 POST: /Talep/Create
         [HttpPost]
-        public IActionResult Create(string TalepNo, int DepartmanID, int CostCenterID, int HizmetID)
+        [SessionAuthorize]
+        public async Task<IActionResult> Create(string TalepNo, int DepartmanID, int CostCenterID, int HizmetID)
         {
-            if (HttpContext.Session.GetString("User") == null)
-            {
-                TempData["LoginError"] = "Talep oluşturmak için önce giriş yapmalısınız.";
-                return RedirectToAction("Index", "Home");
-            }
-
             if (DepartmanID == 0 || CostCenterID == 0 || HizmetID == 0)
             {
                 ViewBag.Error = "Departman, Masraf Merkezi ve Hizmet Tipi seçilmelidir.";
-                ViewBag.TalepNo = string.IsNullOrEmpty(TalepNo) ? GenerateNewTalepNo() : TalepNo;
-                LoadDropDowns();
+                ViewBag.TalepNo = string.IsNullOrEmpty(TalepNo) ? await GenerateNewTalepNo() : TalepNo;
+                await LoadDropDowns();
                 return View();
             }
 
@@ -173,7 +176,7 @@ namespace MubeaSatinalmaPortal.Controllers
 
             using (SqlConnection conn = new SqlConnection(connStr))
             {
-                conn.Open();
+                await conn.OpenAsync(); // ← async
                 SqlTransaction tran = conn.BeginTransaction();
 
                 try
@@ -182,11 +185,11 @@ namespace MubeaSatinalmaPortal.Controllers
                     int newTalepId;
 
                     string insertHeaderSql = @"
-                        INSERT INTO TBL_SatinAlmaTalepHeader
-                            (TalepNo, DepartmanID, CostCenterID, HizmetID, CreatedByUser, TalepStatus, TalepIsDeleted, CreatedDate, TalepStatusLastUpdate)
-                        VALUES
-                            (@TalepNo, @DepartmanID, @CostCenterID, @HizmetID, @CreatedByUser, 0, 0, GETDATE(), GETDATE());
-                        SELECT CAST(SCOPE_IDENTITY() AS INT);";
+                INSERT INTO TBL_SatinAlmaTalepHeader
+                    (TalepNo, DepartmanID, CostCenterID, HizmetID, CreatedByUser, TalepStatus, TalepIsDeleted, CreatedDate, TalepStatusLastUpdate)
+                VALUES
+                    (@TalepNo, @DepartmanID, @CostCenterID, @HizmetID, @CreatedByUser, 0, 0, GETDATE(), GETDATE());
+                SELECT CAST(SCOPE_IDENTITY() AS INT);";
 
                     using (SqlCommand cmd = new SqlCommand(insertHeaderSql, conn, tran))
                     {
@@ -196,7 +199,7 @@ namespace MubeaSatinalmaPortal.Controllers
                         cmd.Parameters.AddWithValue("@HizmetID", HizmetID);
                         cmd.Parameters.AddWithValue("@CreatedByUser", currentUser);
 
-                        newTalepId = (int)cmd.ExecuteScalar();
+                        newTalepId = (int)await cmd.ExecuteScalarAsync(); // ← async
                     }
 
                     // 2) DETAILS INSERT
@@ -247,40 +250,40 @@ namespace MubeaSatinalmaPortal.Controllers
                         }
 
                         string insertDetailSql = @"
-                            INSERT INTO TBL_SatinAlmaTalepDetails
-                            (
-                                TalepID,
-                                TalepDetailsRows,
-                                TalepAdet,
-                                TalepBirim,
-                                TalepMalzeme,
-                                TalepGerekce,
-                                TavsiyeTedarikci,
-                                TalepFiyat,
-                                FiyatParaBirimi,
-                                TedarikciUrunKodu,
-                                TalepTipi,
-                                TalepTermin,
-                                TalepEdenKisi,
-                                TalepSatirIsDeleted
-                            )
-                            VALUES
-                            (
-                                @TalepID,
-                                @TalepDetailsRows,
-                                @TalepAdet,
-                                @TalepBirim,
-                                @TalepMalzeme,
-                                @TalepGerekce,
-                                @TavsiyeTedarikci,
-                                @TalepFiyat,
-                                @FiyatParaBirimi,
-                                @TedarikciUrunKodu,
-                                @TalepTipi,
-                                @TalepTermin,
-                                @TalepEdenKisi,
-                                0
-                            );";
+                    INSERT INTO TBL_SatinAlmaTalepDetails
+                    (
+                        TalepID,
+                        TalepDetailsRows,
+                        TalepAdet,
+                        TalepBirim,
+                        TalepMalzeme,
+                        TalepGerekce,
+                        TavsiyeTedarikci,
+                        TalepFiyat,
+                        FiyatParaBirimi,
+                        TedarikciUrunKodu,
+                        TalepTipi,
+                        TalepTermin,
+                        TalepEdenKisi,
+                        TalepSatirIsDeleted
+                    )
+                    VALUES
+                    (
+                        @TalepID,
+                        @TalepDetailsRows,
+                        @TalepAdet,
+                        @TalepBirim,
+                        @TalepMalzeme,
+                        @TalepGerekce,
+                        @TavsiyeTedarikci,
+                        @TalepFiyat,
+                        @FiyatParaBirimi,
+                        @TedarikciUrunKodu,
+                        @TalepTipi,
+                        @TalepTermin,
+                        @TalepEdenKisi,
+                        0
+                    );";
 
                         using (SqlCommand cmd = new SqlCommand(insertDetailSql, conn, tran))
                         {
@@ -304,7 +307,7 @@ namespace MubeaSatinalmaPortal.Controllers
 
                             cmd.Parameters.AddWithValue("@TalepEdenKisi", (object?)(edenList[i]?.ToUpper()) ?? DBNull.Value);
 
-                            cmd.ExecuteNonQuery();
+                            await cmd.ExecuteNonQueryAsync(); // ← async
                         }
                     }
 
@@ -313,10 +316,10 @@ namespace MubeaSatinalmaPortal.Controllers
                 catch (Exception ex)
                 {
                     tran.Rollback();
-                    TempData["SaveError"] = "Talep kaydedilirken bir hata oluştu: " + ex.Message;
+                    TempData["SaveError"] = "Talep kaydedilirken bir hata oluştu. Lütfen tekrar deneyin.";
 
-                    ViewBag.TalepNo = string.IsNullOrEmpty(TalepNo) ? GenerateNewTalepNo() : TalepNo;
-                    LoadDropDowns();
+                    ViewBag.TalepNo = string.IsNullOrEmpty(TalepNo) ? await GenerateNewTalepNo() : TalepNo;
+                    await LoadDropDowns();
                     return View();
                 }
             }
@@ -327,14 +330,9 @@ namespace MubeaSatinalmaPortal.Controllers
 
         // 🔹 GET: /Talep/Index  -> Kullanıcının kendi oluşturduğu talepler
         [HttpGet]
-        public IActionResult Index()
+        [SessionAuthorize]
+        public async Task<IActionResult> Index() // ← async Task<IActionResult>
         {
-            if (HttpContext.Session.GetString("User") == null)
-            {
-                TempData["LoginError"] = "Talep listesini görmek için önce giriş yapmalısınız.";
-                return RedirectToAction("Index", "Home");
-            }
-
             string currentUser = HttpContext.Session.GetString("User") ?? "UNKNOWN";
             string connStr = _config.GetConnectionString("MubeaDB");
 
@@ -342,39 +340,39 @@ namespace MubeaSatinalmaPortal.Controllers
 
             using (SqlConnection conn = new SqlConnection(connStr))
             {
-                conn.Open();
+                await conn.OpenAsync(); // ← async
 
                 string query = @"
-                    SELECT 
-                        H.TalepID,
-                        H.TalepNo,
-                        H.CreatedDate,
-                        D.DepartmanKodu,
-                        C.CostCenterCode,
-                        HT.HizmetKodu,
-                        S.TalepStatus,
-                        S.TalepStatusAciklamasi
-                    FROM TBL_SatinAlmaTalepHeader H
-                    LEFT JOIN TBL_Departman D
-                        ON H.DepartmanID = D.DepartmanID
-                    LEFT JOIN TBL_CostCenter C
-                        ON H.CostCenterID = C.CostCenterID
-                    LEFT JOIN TBL_HizmetTipi HT
-                        ON H.HizmetID = HT.HizmetID
-                    LEFT JOIN TBL_TalepOnayAciklama S
-                        ON H.TalepStatus = S.TalepStatusId
-                    WHERE 
-                        H.TalepIsDeleted = 0
-                        AND H.CreatedByUser = @CreatedByUser
-                    ORDER BY H.CreatedDate DESC;";
+            SELECT 
+                H.TalepID,
+                H.TalepNo,
+                H.CreatedDate,
+                D.DepartmanKodu,
+                C.CostCenterCode,
+                HT.HizmetKodu,
+                S.TalepStatus,
+                S.TalepStatusAciklamasi
+            FROM TBL_SatinAlmaTalepHeader H
+            LEFT JOIN TBL_Departman D
+                ON H.DepartmanID = D.DepartmanID
+            LEFT JOIN TBL_CostCenter C
+                ON H.CostCenterID = C.CostCenterID
+            LEFT JOIN TBL_HizmetTipi HT
+                ON H.HizmetID = HT.HizmetID
+            LEFT JOIN TBL_TalepOnayAciklama S
+                ON H.TalepStatus = S.TalepStatusId
+            WHERE 
+                H.TalepIsDeleted = 0
+                AND H.CreatedByUser = @CreatedByUser
+            ORDER BY H.CreatedDate DESC;";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@CreatedByUser", currentUser);
 
-                    using (SqlDataReader dr = cmd.ExecuteReader())
+                    using (SqlDataReader dr = await cmd.ExecuteReaderAsync()) // ← async
                     {
-                        while (dr.Read())
+                        while (await dr.ReadAsync()) // ← async
                         {
                             talepList.Add(new TalepListItemViewModel
                             {
@@ -398,13 +396,15 @@ namespace MubeaSatinalmaPortal.Controllers
 
         // 🔹 GET: /Talep/OnayBekleyenler  -> Mevcut kullanıcı rolüne göre bekleyen onaylar
         [HttpGet]
-        public IActionResult OnayBekleyenler()
+        [SessionAuthorize(MinLevel = 1)]  // ← YENİ: En az Departman Yöneticisi olmalı!
+                                          // ✅ YENİ:
+        public async Task<IActionResult> OnayBekleyenler()
         {
-            if (HttpContext.Session.GetString("User") == null)
-            {
-                TempData["LoginError"] = "Bekleyen onayları görmek için önce giriş yapmalısınız.";
-                return RedirectToAction("Index", "Home");
-            }
+            //if (HttpContext.Session.GetString("User") == null)
+            //{
+            //    TempData["LoginError"] = "Bekleyen onayları görmek için önce giriş yapmalısınız.";
+            //    return RedirectToAction("Index", "Home");
+            //}
 
             string currentUser = HttpContext.Session.GetString("User") ?? "UNKNOWN";
             string connStr = _config.GetConnectionString("MubeaDB");
@@ -414,7 +414,7 @@ namespace MubeaSatinalmaPortal.Controllers
 
             using (SqlConnection conn = new SqlConnection(connStr))
             {
-                conn.Open();
+                await conn.OpenAsync();
 
                 string userQuery = @"
                     SELECT UserLevel, DepartmanID
@@ -426,9 +426,9 @@ namespace MubeaSatinalmaPortal.Controllers
                 {
                     cmd.Parameters.AddWithValue("@User", currentUser);
 
-                    using (SqlDataReader dr = cmd.ExecuteReader())
+                    using (SqlDataReader dr = await cmd.ExecuteReaderAsync())
                     {
-                        if (dr.Read())
+                        if (await dr.ReadAsync())
                         {
                             if (dr["UserLevel"] != DBNull.Value)
                                 userLevel = Convert.ToInt32(dr["UserLevel"]);
@@ -474,7 +474,7 @@ namespace MubeaSatinalmaPortal.Controllers
 
             using (SqlConnection conn = new SqlConnection(connStr))
             {
-                conn.Open();
+                conn.OpenAsync();
 
                 string query = @"
                     SELECT 
@@ -515,9 +515,9 @@ namespace MubeaSatinalmaPortal.Controllers
                         cmd.Parameters.AddWithValue("@DepartmanID", kullaniciDepartmanId.Value);
                     }
 
-                    using (SqlDataReader dr = cmd.ExecuteReader())
+                    using (SqlDataReader dr = await cmd.ExecuteReaderAsync())
                     {
-                        while (dr.Read())
+                        while (await dr.ReadAsync())
                         {
                             bekleyenList.Add(new TalepListItemViewModel
                             {
@@ -548,13 +548,14 @@ namespace MubeaSatinalmaPortal.Controllers
 
         // 🔹 GET: /Talep/Detay/5  -> Talep detay ekranı + ONAY/RED GEÇMİŞİ
         [HttpGet]
+        [SessionAuthorize]  // ← EKLE
         public IActionResult Detay(int id)
         {
-            if (HttpContext.Session.GetString("User") == null)
-            {
-                TempData["LoginError"] = "Talep detayını görmek için önce giriş yapmalısınız.";
-                return RedirectToAction("Index", "Home");
-            }
+            //if (HttpContext.Session.GetString("User") == null)
+            //{
+            //    TempData["LoginError"] = "Talep detayını görmek için önce giriş yapmalısınız.";
+            //    return RedirectToAction("Index", "Home");
+            //}
 
             string currentUser = HttpContext.Session.GetString("User") ?? "UNKNOWN";
             int userLevel = HttpContext.Session.GetInt32("UserLevel") ?? 0;
@@ -766,13 +767,14 @@ namespace MubeaSatinalmaPortal.Controllers
 
         // 🔹 POST: /Talep/Onayla/5
         [HttpPost]
+        [SessionAuthorize(MinLevel = 1)]  // ← EKLE: En az Yönetici
         public IActionResult Onayla(int id, string onayNotu)
         {
-            if (HttpContext.Session.GetString("User") == null)
-            {
-                TempData["LoginError"] = "Onay işlemi için önce giriş yapmalısınız.";
-                return RedirectToAction("Index", "Home");
-            }
+            //if (HttpContext.Session.GetString("User") == null)
+            //{
+            //    TempData["LoginError"] = "Onay işlemi için önce giriş yapmalısınız.";
+            //    return RedirectToAction("Index", "Home");
+            //}
 
             string currentUser = HttpContext.Session.GetString("User") ?? "UNKNOWN";
             int userLevel = HttpContext.Session.GetInt32("UserLevel") ?? 0;
@@ -922,13 +924,14 @@ namespace MubeaSatinalmaPortal.Controllers
 
         // 🔹 POST: /Talep/Reddet/5
         [HttpPost]
+        [SessionAuthorize(MinLevel = 1)]  // ← EKLE: En az Yönetici
         public IActionResult Reddet(int id, string onayNotu)
         {
-            if (HttpContext.Session.GetString("User") == null)
-            {
-                TempData["LoginError"] = "Red işlemi için önce giriş yapmalısınız.";
-                return RedirectToAction("Index", "Home");
-            }
+            //if (HttpContext.Session.GetString("User") == null)
+            //{
+            //    TempData["LoginError"] = "Red işlemi için önce giriş yapmalısınız.";
+            //    return RedirectToAction("Index", "Home");
+            //}
 
             string currentUser = HttpContext.Session.GetString("User") ?? "UNKNOWN";
             int userLevel = HttpContext.Session.GetInt32("UserLevel") ?? 0;
