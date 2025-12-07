@@ -1,0 +1,160 @@
+﻿@model List<MubeaSatinalmaPortal.Models.RaporTalepViewModel>
+
+@{
+    ViewData["Title"] = "Tarih Bazlı Talep Raporu";
+
+    DateTime? baslangic = ViewBag.Baslangic as DateTime?;
+    DateTime? bitis = ViewBag.Bitis as DateTime?;
+
+    string basVal = baslangic.HasValue ? baslangic.Value.ToString("yyyy-MM-dd") : "";
+    string bitVal = bitis.HasValue ? bitis.Value.ToString("yyyy-MM-dd") : "";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-3">Tarih Bazlı Satın Alma Talep Raporu</h2>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3 align-items-end">
+                <div class="col-md-3">
+                    <label class="form-label fw-semibold">Başlangıç Tarihi</label>
+                    <input type="date"
+                           name="baslangic"
+                           class="form-control"
+                           value="@basVal" />
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label fw-semibold">Bitiş Tarihi</label>
+                    <input type="date"
+                           name="bitis"
+                           class="form-control"
+                           value="@bitVal" />
+                </div>
+
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary">
+                        Listele
+                    </button>
+                </div>
+            </form>
+
+            @if (ViewBag.InfoMessage != null)
+            {
+                <div class="alert alert-info mt-3">
+                    @ViewBag.InfoMessage
+                </div>
+            }
+        </div>
+    </div>
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="accordion" id="talepAccordion">
+            @foreach (var item in Model)
+            {
+                var collapseId = $"collapse_{item.TalepID}";
+                var headingId = $"heading_{item.TalepID}";
+
+                <div class="accordion-item mb-2">
+                    <h2 class="accordion-header" id="@headingId">
+                        <button class="accordion-button collapsed"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#@collapseId"
+                                aria-expanded="false"
+                                aria-controls="@collapseId">
+                            <div class="w-100">
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <strong>@item.TalepNo</strong>
+                                    </div>
+                                    <div class="col-md-2">
+                                        @item.CreatedDate.ToString("dd.MM.yyyy HH:mm")
+                                    </div>
+                                    <div class="col-md-3">
+                                        @item.DepartmanKodu - @item.DepartmanAciklama
+                                    </div>
+                                    <div class="col-md-2">
+                                        @item.CostCenterCode
+                                    </div>
+                                    <div class="col-md-3">
+                                        @item.HizmetKodu - @item.HizmetAciklamasi
+                                    </div>
+                                </div>
+                                <div class="row mt-1">
+                                    <div class="col-md-3">
+                                        <small>Oluşturan: @item.CreatedByUser</small>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <small>Durum: <strong>@item.TalepStatusKisa</strong></small>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <small>@item.TalepStatusAciklama</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </button>
+                    </h2>
+                    <div id="@collapseId"
+                         class="accordion-collapse collapse"
+                         aria-labelledby="@headingId"
+                         data-bs-parent="#talepAccordion">
+                        <div class="accordion-body">
+                            <h6>Talep Satırları</h6>
+
+                            @if (item.Satirlar != null && item.Satirlar.Count > 0)
+                            {
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-sm align-middle">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Satır</th>
+                                                <th>Adet</th>
+                                                <th>Birim</th>
+                                                <th>Malzeme Tanımı</th>
+                                                <th>Talep Gerekçesi</th>
+                                                <th>Tavsiye Edilen Tedarikçi</th>
+                                                <th>Fiyat</th>
+                                                <th>Para Birimi</th>
+                                                <th>Tedarikçi Ürün Kodu</th>
+                                                <th>Talep Tipi</th>
+                                                <th>İhtiyaç Termini</th>
+                                                <th>Talep Eden</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var s in item.Satirlar)
+                                            {
+                                                <tr>
+                                                    <td>@s.TalepDetailsRows</td>
+                                                    <td>@(s.TalepAdet?.ToString("0.##"))</td>
+                                                    <td>@s.TalepBirim</td>
+                                                    <td>@s.TalepMalzeme</td>
+                                                    <td>@s.TalepGerekce</td>
+                                                    <td>@s.TavsiyeTedarikci</td>
+                                                    <td>@(s.TalepFiyat?.ToString("0.##"))</td>
+                                                    <td>@s.FiyatParaBirimi</td>
+                                                    <td>@s.TedarikciUrunKodu</td>
+                                                    <td>@s.TalepTipi</td>
+                                                    <td>@(s.TalepTermin?.ToString("dd.MM.yyyy"))</td>
+                                                    <td>@s.TalepEdenKisi</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="alert alert-secondary">
+                                    Bu talep için detay satırı bulunmamaktadır.
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

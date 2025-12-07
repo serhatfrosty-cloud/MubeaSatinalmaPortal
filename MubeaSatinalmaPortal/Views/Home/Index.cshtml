@@ -1,0 +1,104 @@
+﻿@using Microsoft.AspNetCore.Http
+
+@{
+    ViewData["Title"] = "Mubea Satın Alma Portalı";
+
+    bool kullaniciLoginMi = Context.Session.GetString("User") != null;
+}
+
+<!-- Talep kayıt başarılı mesajı -->
+@if (TempData["SaveSuccess"] != null)
+{
+    <div class="alert alert-success text-center m-0">
+        @TempData["SaveSuccess"]
+    </div>
+}
+
+<!-- Talep kayıt hata mesajı -->
+@if (TempData["SaveError"] != null)
+{
+    <div class="alert alert-danger text-center m-0">
+        @TempData["SaveError"]
+    </div>
+}
+
+<!-- Login hatası varsa (sadece login olmayan kullanıcı için) -->
+@if (!kullaniciLoginMi && TempData["LoginError"] != null)
+{
+    <div class="alert alert-danger text-center m-0">
+        @TempData["LoginError"]
+    </div>
+}
+
+<div class="hero-section d-flex align-items-center">
+    <div class="container">
+        <div class="row align-items-center">
+
+            <!-- SOL TARAF: Tanıtım + Talep Oluştur -->
+            <div class="col-lg-7">
+                <h1 class="display-4 fw-bold mb-3">
+                    Mubea <span class="text-primary">Satın Alma Talep Portalı</span>
+                </h1>
+
+                <p class="lead mb-4">
+                    Mubea çalışanları için tek noktadan, hızlı ve izlenebilir satın alma talep yönetimi.
+                    Şeffaf, standart ve takip edilebilir süreçler ile IT tarafından geliştirilmiştir.
+                </p>
+
+                <ul class="feature-list mb-4">
+                    <li>📝 Online satın alma talebi oluşturma</li>
+                    <li>📊 Talep durumunu anlık takip etme</li>
+                    <li>✅ Dijital onay süreçleri</li>
+                    <li>📂 Arşivlenmiş taleplere hızlı erişim</li>
+                </ul>
+
+                @if (kullaniciLoginMi)
+                {
+                    <!-- Login olmuş kullanıcı için buton -->
+                    <a asp-controller="Talep" asp-action="Create"
+                       class="btn btn-success btn-lg px-4">
+                        Satın Alma Talep Oluştur
+                    </a>
+                }
+                else
+                {
+                    <p class="text-muted small">
+                        Satın alma talebi oluşturmak için lütfen önce giriş yapınız.
+                    </p>
+                }
+            </div>
+
+            <!-- SAĞ TARAF: LOGIN FORMU (sadece login olunmadıysa) -->
+            @if (!kullaniciLoginMi)
+            {
+                <div class="col-lg-5 mt-4 mt-lg-0">
+                    <div class="info-card shadow-lg p-4 bg-white">
+                        <h5 class="fw-bold mb-3 text-center">Portala Giriş</h5>
+
+                        <form asp-controller="Account" asp-action="Login" method="post">
+                            <div class="mb-3">
+                                <label class="form-label">Kullanıcı</label>
+                                <input type="text" name="username" class="form-control" required />
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Şifre</label>
+                                <input type="password" name="password" class="form-control" required />
+                            </div>
+
+                            <button type="submit" class="btn btn-primary w-100">
+                                Giriş Yap
+                            </button>
+                        </form>
+
+                        <hr class="my-4" />
+
+                        <div class="small text-muted">
+                            Giriş yaparken sorun yaşıyorsanız lütfen Mubea IT departmanı ile iletişime geçin.
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

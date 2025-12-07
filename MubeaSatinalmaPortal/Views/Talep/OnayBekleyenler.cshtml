@@ -1,0 +1,124 @@
+﻿@model List<MubeaSatinalmaPortal.Models.TalepListItemViewModel>
+
+@{
+    ViewData["Title"] = "Bekleyen Onaylarım";
+    string currentUser = ViewBag.CurrentUser as string ?? "KULLANICI";
+    int userLevel = ViewBag.UserLevel != null ? (int)ViewBag.UserLevel : 0;
+
+    string rolAdi = userLevel switch
+    {
+        1 => "Departman Yöneticisi",
+        2 => "Satın Alma",
+        3 => "Genel Müdür",
+        _ => "Kullanıcı"
+    };
+}
+
+<div class="container mt-4">
+    <h2 class="mb-2">Bekleyen Onaylarım</h2>
+    <p class="text-muted mb-3">
+        Merhaba <strong>@currentUser</strong> (@rolAdi)
+    </p>
+
+    @* ✉️ Onay / Red sonrası gelen mesajlar *@
+    @if (TempData["SaveSuccess"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["SaveSuccess"]
+        </div>
+    }
+
+    @if (TempData["SaveError"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["SaveError"]
+        </div>
+    }
+
+    @if (ViewBag.InfoMessage != null)
+    {
+        <div class="alert alert-info">
+            @ViewBag.InfoMessage
+        </div>
+    }
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="mb-3">
+            <label class="form-label fw-semibold">Filtrele</label>
+            <input type="text"
+                   id="filterInput"
+                   class="form-control"
+                   placeholder="Talep No, Departman, Cost Center, Hizmet, Durum..."
+                   onkeyup="filterTable()" />
+            <small class="text-muted">
+                Yazdıkça aşağıdaki liste filtrelenir.
+            </small>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-striped table-hover table-sm" id="talepTable">
+                <thead class="table-light">
+                    <tr>
+                        <th>Talep No</th>
+                        <th>Oluşturma Tarihi</th>
+                        <th>Departman</th>
+                        <th>Cost Center</th>
+                        <th>Hizmet Tipi</th>
+                        <th>Durum</th>
+                        <th>Durum Açıklaması</th>
+                        <th style="width:120px;">İşlem</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.TalepNo</td>
+                            <td>@item.CreatedDate.ToString("dd.MM.yyyy HH:mm")</td>
+                            <td>@item.Departman</td>
+                            <td>@item.CostCenter</td>
+                            <td>@item.HizmetTipi</td>
+                            <td>@item.TalepStatusKisa</td>
+                            <td>@item.TalepStatusAciklama</td>
+                            <td>
+                                <a asp-controller="Talep"
+                                   asp-action="Detay"
+                                   asp-route-id="@item.TalepID"
+                                   class="btn btn-sm btn-outline-primary">
+                                    Detay
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        function filterTable() {
+            var input = document.getElementById("filterInput");
+            var filter = input.value.toUpperCase();
+            var table = document.getElementById("talepTable");
+            var tr = table.getElementsByTagName("tr");
+
+            for (var i = 1; i < tr.length; i++) { // 0. satır header
+                var tds = tr[i].getElementsByTagName("td");
+                var rowText = "";
+
+                for (var j = 0; j < tds.length; j++) {
+                    rowText += (tds[j].textContent || tds[j].innerText) + " ";
+                }
+
+                if (rowText.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    </script>
+}

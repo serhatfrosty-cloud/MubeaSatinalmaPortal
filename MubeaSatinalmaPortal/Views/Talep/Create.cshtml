@@ -1,0 +1,243 @@
+﻿@{
+    ViewData["Title"] = "Satın Alma Talep Oluştur";
+
+    var talepNo = ViewBag.TalepNo as string ?? "MPXXXXXXXX";
+}
+
+<style>
+    .uppercase {
+        text-transform: uppercase;
+    }
+</style>
+
+<div class="container mt-4">
+    <h2 class="mb-4">@talepNo Satın Alma Talebi</h2>
+
+    <div class="card shadow p-4 mb-4">
+        <h5 class="mb-3">Temel Bilgiler</h5>
+
+        <form method="post">
+            <!-- TalepNo'yu POST ile göndermek için gizli alan -->
+            <input type="hidden" name="TalepNo" value="@talepNo" />
+
+            <div class="row g-3 mb-4">
+                <div class="col-md-4">
+                    <label class="form-label">Departman</label>
+                    <select class="form-select" name="DepartmanID" asp-items="ViewBag.DepartmanList">
+                        <option value="">Seçiniz...</option>
+                    </select>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">Masraf Merkezi (Cost Center)</label>
+                    <select class="form-select" name="CostCenterID" asp-items="ViewBag.CostCenterList">
+                        <option value="">Seçiniz...</option>
+                    </select>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">Hizmet Tipi</label>
+                    <select class="form-select" name="HizmetID" asp-items="ViewBag.HizmetTipiList">
+                        <option value="">Seçiniz...</option>
+                    </select>
+                </div>
+            </div>
+
+            <h5 class="mb-3">Talep Satırları</h5>
+
+            <div class="table-responsive mb-3">
+                <table class="table table-bordered table-sm align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Talep Satır</th>
+                            <th>Talep Adet</th>
+                            <th>Birim</th>
+                            <th>Malzeme Tanımı</th>
+                            <th>Talep Gerekçesi</th>
+                            <th>Tavsiye Edilen Tedarikçi</th>
+                            <th>Fiyat</th>
+                            <th>Para Birimi</th>
+                            <th>Tedarikçi Ürün Kodu</th>
+                            <th>Talep Tipi</th>
+                            <th>İhtiyaç Termini</th>
+                            <th>Talep Eden</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="talepRowsBody">
+                        <!-- 1. satır -->
+                        <tr>
+                            <td class="text-center talep-row-index">1</td>
+
+                            <td>
+                                <input type="number" step="0.01" class="form-control form-control-sm" name="TalepAdet" />
+                            </td>
+
+                            <td>
+                                <input type="text" class="form-control form-control-sm uppercase" name="TalepBirim" />
+                            </td>
+
+                            <td>
+                                <input type="text" class="form-control form-control-sm uppercase" name="TalepMalzeme" />
+                            </td>
+
+                            <td>
+                                <input type="text" class="form-control form-control-sm uppercase" name="TalepGerekce" />
+                            </td>
+
+                            <td>
+                                <input type="text" class="form-control form-control-sm uppercase" name="TavsiyeTedarikci" />
+                            </td>
+
+                            <td>
+                                <input type="number" step="0.01" class="form-control form-control-sm" name="TalepFiyat" />
+                            </td>
+
+                            <td>
+                                <input type="text" class="form-control form-control-sm uppercase" name="FiyatParaBirimi" placeholder="EUR, USD, TL" />
+                            </td>
+
+                            <td>
+                                <input type="text" class="form-control form-control-sm uppercase" name="TedarikciUrunKodu" />
+                            </td>
+
+                            <td>
+                                <select class="form-select form-select-sm uppercase" name="TalepTipi">
+                                    <option value="">SEÇİNİZ</option>
+                                    <option value="YENİ">YENİ</option>
+                                    <option value="YEDEK">YEDEK</option>
+                                </select>
+                            </td>
+
+                            <td>
+                                <input type="date" class="form-control form-control-sm" name="TalepTermin" />
+                            </td>
+
+                            <td>
+                                <input type="text" class="form-control form-control-sm uppercase" name="TalepEdenKisi" />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <button type="button" class="btn btn-outline-primary btn-sm mb-4" onclick="addTalepRow()">
+                + Talep Satırı Ekle
+            </button>
+
+            <hr class="my-4" />
+
+            <div class="d-flex justify-content-between">
+                <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">← Anasayfaya Dön</a>
+                <button type="submit" class="btn btn-primary">Kaydet</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="alert alert-info">
+        <strong>Bilgi:</strong> Bu ekranda:
+        <ul>
+            <li>@talepNo numaralı talebi oluşturmaktasınız.</li>
+            <li>Satır ekleyerek çoklu talep oluşturabilirsiniz.</li>
+        </ul>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Uppercase alanlar için input anında büyük yazılsın
+        document.addEventListener("input", function (e) {
+            if (e.target.classList.contains("uppercase")) {
+                e.target.value = e.target.value.toUpperCase();
+            }
+        });
+
+        function addTalepRow() {
+            var tbody = document.getElementById("talepRowsBody");
+            var count = tbody.getElementsByTagName("tr").length + 1;
+
+            var row = document.createElement("tr");
+
+            row.innerHTML = `
+                <td class="text-center talep-row-index">${count}</td>
+
+                <td><input type="number" step="0.01" class="form-control form-control-sm" name="TalepAdet" /></td>
+
+                <td><input type="text" class="form-control form-control-sm uppercase" name="TalepBirim" /></td>
+
+                <td><input type="text" class="form-control form-control-sm uppercase" name="TalepMalzeme" /></td>
+
+                <td><input type="text" class="form-control form-control-sm uppercase" name="TalepGerekce" /></td>
+
+                <td><input type="text" class="form-control form-control-sm uppercase" name="TavsiyeTedarikci" /></td>
+
+                <td><input type="number" step="0.01" class="form-control form-control-sm" name="TalepFiyat" /></td>
+
+                <td><input type="text" class="form-control form-control-sm uppercase" name="FiyatParaBirimi" /></td>
+
+                <td><input type="text" class="form-control form-control-sm uppercase" name="TedarikciUrunKodu" /></td>
+
+                <td>
+                    <select class="form-select form-select-sm uppercase" name="TalepTipi">
+                        <option value="">SEÇİNİZ</option>
+                        <option value="YENİ">YENİ</option>
+                        <option value="YEDEK">YEDEK</option>
+                    </select>
+                </td>
+
+                <td><input type="date" class="form-control form-control-sm" name="TalepTermin" /></td>
+
+                <td><input type="text" class="form-control form-control-sm uppercase" name="TalepEdenKisi" /></td>
+            `;
+
+            tbody.appendChild(row);
+        }
+
+        // 🔹 Departman / CostCenter / Hizmet Tipi zorunlu alan kontrolü
+        document.addEventListener("DOMContentLoaded", function () {
+            var form = document.querySelector("form");
+
+            if (!form) return;
+
+            form.addEventListener("submit", function (e) {
+                var eksikler = [];
+
+                var departman = form.querySelector('select[name="DepartmanID"]');
+                var costcenter = form.querySelector('select[name="CostCenterID"]');
+                var hizmet = form.querySelector('select[name="HizmetID"]');
+
+                // Önce varsa eski is-invalid sınıflarını temizle
+                [departman, costcenter, hizmet].forEach(function (el) {
+                    if (el) el.classList.remove("is-invalid");
+                });
+
+                if (departman && (departman.value === "" || departman.value === "0")) {
+                    eksikler.push("Departman");
+                    departman.classList.add("is-invalid");
+                }
+
+                if (costcenter && (costcenter.value === "" || costcenter.value === "0")) {
+                    eksikler.push("Masraf Merkezi");
+                    costcenter.classList.add("is-invalid");
+                }
+
+                if (hizmet && (hizmet.value === "" || hizmet.value === "0")) {
+                    eksikler.push("Hizmet Tipi");
+                    hizmet.classList.add("is-invalid");
+                }
+
+                if (eksikler.length > 0) {
+                    var msg = "Lütfen aşağıdaki zorunlu alanları doldurun:\n\n";
+                    for (var i = 0; i < eksikler.length; i++) {
+                        msg += "- " + eksikler[i] + "\n";
+                    }
+                    alert(msg);
+
+                    // Formun gönderilmesini engelle
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+            });
+        });
+    </script>
+}
