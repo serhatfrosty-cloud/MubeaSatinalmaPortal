@@ -1,16 +1,20 @@
 ﻿@model MubeaSatinalmaPortal.Models.TalepDetayViewModel
 
+@using Microsoft.Extensions.Localization
+@using MubeaSatinalmaPortal.Resources
+@inject IStringLocalizer<SharedResources> Localizer
+
 @{
-    ViewData["Title"] = "Talep Detayı - " + Model.TalepNo;
+    ViewData["Title"] = Localizer["RequestDetail"] + " - " + Model.TalepNo;
 }
 
 <div class="container mt-4">
-    <h2 class="mb-3">Talep Detayı</h2>
+    <h2 class="mb-3">@Localizer["RequestDetail"]</h2>
     <a asp-controller="Rapor"
        asp-action="TalepFormPdf"
        asp-route-id="@Model.TalepID"
        class="btn btn-outline-primary btn-sm">
-        Yazdır
+        @Localizer["Print"]
     </a>
 
     @if (TempData["SaveError"] != null)
@@ -33,34 +37,34 @@
 
             <div class="row mb-2">
                 <div class="col-md-3">
-                    <strong>Oluşturma Tarihi:</strong><br />
+                    <strong>@Localizer["CreationDate"]:</strong><br />
                     @Model.CreatedDate.ToString("dd.MM.yyyy HH:mm")
                 </div>
                 <div class="col-md-3">
-                    <strong>Oluşturan Kullanıcı:</strong><br />
+                    <strong>@Localizer["CreatingUser"]:</strong><br />
                     @Model.CreatedByUser
                 </div>
                 <div class="col-md-3">
-                    <strong>Departman:</strong><br />
+                    <strong>@Localizer["Department"]:</strong><br />
                     @Model.DepartmanKodu - @Model.DepartmanAciklama
                 </div>
                 <div class="col-md-3">
-                    <strong>Cost Center:</strong><br />
+                    <strong>@Localizer["CostCenter"]:</strong><br />
                     @Model.CostCenterCode - @Model.CostCenterDescription
                 </div>
             </div>
 
             <div class="row mb-2">
                 <div class="col-md-3">
-                    <strong>Hizmet Tipi:</strong><br />
+                    <strong>@Localizer["ServiceType"]:</strong><br />
                     @Model.HizmetKodu - @Model.HizmetAciklamasi
                 </div>
                 <div class="col-md-3">
-                    <strong>Talep Durumu:</strong><br />
+                    <strong>@Localizer["RequestStatus"]:</strong><br />
                     @Model.TalepStatusKisa
                 </div>
                 <div class="col-md-6">
-                    <strong>Durum Açıklaması:</strong><br />
+                    <strong>@Localizer["StatusDescription"]:</strong><br />
                     @Model.TalepStatusAciklama
                 </div>
             </div>
@@ -70,14 +74,14 @@
             @if (Model.KullaniciOnayVerebilirMi)
             {
                 <div class="alert alert-warning">
-                    Bu talep üzerinde <strong>ONAY / RED</strong> yetkiniz bulunmaktadır.
+                    @Localizer["YouCanApproveReject"]
                 </div>
 
                 <form method="post">
                     <div class="mb-3">
-                        <label class="form-label fw-semibold">Onay / Red Notu (opsiyonel)</label>
+                        <label class="form-label fw-semibold">@Localizer["ApprovalRejectNote"] (@Localizer["Optional"])</label>
                         <textarea name="onayNotu" class="form-control" rows="3"
-                              placeholder="Onay veya red için açıklama girebilirsiniz."></textarea>
+                              placeholder="@Localizer["ApprovalNoteHint"]"></textarea>
                     </div>
 
                     <div class="d-flex gap-2">
@@ -86,7 +90,7 @@
                                 asp-action="Onayla"
                                 asp-route-id="@Model.TalepID"
                                 class="btn btn-success">
-                            ✅ Onayla
+                            ✅ @Localizer["Approve"]
                         </button>
 
                         <button type="submit"
@@ -94,47 +98,46 @@
                                 asp-action="Reddet"
                                 asp-route-id="@Model.TalepID"
                                 class="btn btn-danger">
-                            ❌ Reddet
+                            ❌ @Localizer["Reject"]
                         </button>
 
                         <a asp-controller="Talep" asp-action="OnayBekleyenler" class="btn btn-secondary ms-auto">
-                            ← Bekleyen Onaylarıma Dön
+                            ← @Localizer["BackToPendingApprovals"]
                         </a>
-
                     </div>
                 </form>
             }
             else
             {
                 <div class="alert alert-secondary">
-                    Bu talep üzerinde onay yetkiniz bulunmamaktadır veya talep bu aşamada değildir.
+                    @Localizer["NoApprovalAuthority"]
                 </div>
 
                 <a asp-controller="Talep" asp-action="OnayBekleyenler" class="btn btn-secondary">
-                    ← Bekleyen Onaylarıma Dön
+                    ← @Localizer["BackToPendingApprovals"]
                 </a>
             }
         </div>
     </div>
 
-    <h5>Talep Satırları</h5>
+    <h5>@Localizer["RequestLines"]</h5>
 
     <div class="table-responsive mb-4">
         <table class="table table-bordered table-sm align-middle">
             <thead class="table-light">
                 <tr>
-                    <th>Satır</th>
-                    <th>Adet</th>
-                    <th>Birim</th>
-                    <th>Malzeme Tanımı</th>
-                    <th>Talep Gerekçesi</th>
-                    <th>Tavsiye Edilen Tedarikçi</th>
-                    <th>Fiyat</th>
-                    <th>Para Birimi</th>
-                    <th>Tedarikçi Ürün Kodu</th>
-                    <th>Talep Tipi</th>
-                    <th>İhtiyaç Termini</th>
-                    <th>Talep Eden</th>
+                    <th>@Localizer["Line"]</th>
+                    <th>@Localizer["Quantity"]</th>
+                    <th>@Localizer["Unit"]</th>
+                    <th>@Localizer["MaterialDescription"]</th>
+                    <th>@Localizer["Reason"]</th>
+                    <th>@Localizer["RecommendedSupplier"]</th>
+                    <th>@Localizer["Price"]</th>
+                    <th>@Localizer["Currency"]</th>
+                    <th>@Localizer["SupplierProductCode"]</th>
+                    <th>@Localizer["RequestType"]</th>
+                    <th>@Localizer["RequirementDeadline"]</th>
+                    <th>@Localizer["Requester"]</th>
                 </tr>
             </thead>
             <tbody>
@@ -159,7 +162,7 @@
         </table>
     </div>
 
-    <h5>Onay / Red Geçmişi</h5>
+    <h5>@Localizer["ApprovalHistory"]</h5>
 
     @if (Model.OnayLoglari != null && Model.OnayLoglari.Any())
     {
@@ -167,13 +170,13 @@
             <table class="table table-bordered table-sm align-middle">
                 <thead class="table-light">
                     <tr>
-                        <th>Tarih / Saat</th>
-                        <th>İşlem</th>
-                        <th>Eski Durum</th>
-                        <th>Yeni Durum</th>
-                        <th>İşlem Yapan</th>
-                        <th>Seviye</th>
-                        <th>Onay / Red Notu</th>
+                        <th>@Localizer["DateTime"]</th>
+                        <th>@Localizer["Action"]</th>
+                        <th>@Localizer["OldStatus"]</th>
+                        <th>@Localizer["NewStatus"]</th>
+                        <th>@Localizer["ActionBy"]</th>
+                        <th>@Localizer["Level"]</th>
+                        <th>@Localizer["Note"]</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -196,7 +199,7 @@
     else
     {
         <div class="alert alert-secondary mb-4">
-            Bu talep için henüz herhangi bir onay / red kaydı bulunmamaktadır.
+            @Localizer["NoApprovalHistory"]
         </div>
     }
 </div>

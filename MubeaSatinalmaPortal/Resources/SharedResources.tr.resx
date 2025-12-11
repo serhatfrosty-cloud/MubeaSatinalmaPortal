@@ -1,0 +1,414 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Login" xml:space="preserve">
+    <value>Giriş Yap</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Şifre</value>
+  </data>
+  <data name="CreateRequest" xml:space="preserve">
+    <value>Yeni Talep Oluştur</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>Kullanıcı Adı</value>
+  </data>
+  <data name="Welcome" xml:space="preserve">
+    <value>Hoş Geldiniz</value>
+  </data>
+  <data name="RequestList" xml:space="preserve">
+    <value>Talep Listesi</value>
+  </data>
+  <data name="PendingApprovals" xml:space="preserve">
+    <value>Bekleyen Onaylarım</value>
+  </data>
+  <data name="Reports" xml:space="preserve">
+    <value>Raporlar</value>
+  </data>
+  <data name="Department" xml:space="preserve">
+    <value>Departman</value>
+  </data>
+  <data name="CostCenter" xml:space="preserve">
+    <value>Masraf Merkezi</value>
+  </data>
+  <data name="ServiceType" xml:space="preserve">
+    <value>Hizmet Tipi</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Kaydet</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>İptal</value>
+  </data>
+  <data name="Approve" xml:space="preserve">
+    <value>Onayla</value>
+  </data>
+  <data name="Reject" xml:space="preserve">
+    <value>Reddet</value>
+  </data>
+  <data name="Details" xml:space="preserve">
+    <value>Detay</value>
+  </data>
+  <data name="Date" xml:space="preserve">
+    <value>Tarih</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>Durum</value>
+  </data>
+  <data name="RequestNo" xml:space="preserve">
+    <value>Talep No</value>
+  </data>
+  <data name="CreatedBy" xml:space="preserve">
+    <value>Oluşturan</value>
+  </data>
+  <data name="Quantity" xml:space="preserve">
+    <value>Adet</value>
+  </data>
+  <data name="Unit" xml:space="preserve">
+    <value>Birim</value>
+  </data>
+  <data name="MaterialDescription" xml:space="preserve">
+    <value>Malzeme Tanımı</value>
+  </data>
+  <data name="Reason" xml:space="preserve">
+    <value>Gerekçe</value>
+  </data>
+  <data name="RecommendedSupplier" xml:space="preserve">
+    <value>Tavsiye Edilen Tedarikçi</value>
+  </data>
+  <data name="Price" xml:space="preserve">
+    <value>Fiyat</value>
+  </data>
+  <data name="Currency" xml:space="preserve">
+    <value>Para Birimi</value>
+  </data>
+  <data name="SupplierProductCode" xml:space="preserve">
+    <value>Tedarikçi Ürün Kodu</value>
+  </data>
+  <data name="RequestType" xml:space="preserve">
+    <value>Talep Tipi</value>
+  </data>
+  <data name="RequirementDeadline" xml:space="preserve">
+    <value>İhtiyaç Termini</value>
+  </data>
+  <data name="Requester" xml:space="preserve">
+    <value>Talep Eden</value>
+  </data>
+  <data name="ErrorOccurred" xml:space="preserve">
+    <value>Bir hata oluştu</value>
+  </data>
+  <data name="SuccessfullySaved" xml:space="preserve">
+    <value>Başarıyla kaydedildi</value>
+  </data>
+  <data name="LoginRequired" xml:space="preserve">
+    <value>Lütfen giriş yapın</value>
+  </data>
+  <data name="NoRecordsFound" xml:space="preserve">
+    <value>Kayıt bulunamadı</value>
+  </data>
+  <data name="SelectDate" xml:space="preserve">
+    <value>Tarih Seçin</value>
+  </data>
+  <data name="StartDate" xml:space="preserve">
+    <value>Başlangıç Tarihi</value>
+  </data>
+  <data name="EndDate" xml:space="preserve">
+    <value>Bitiş Tarihi</value>
+  </data>
+  <data name="Filter" xml:space="preserve">
+    <value>Filtrele</value>
+  </data>
+  <data name="Print" xml:space="preserve">
+    <value>Yazdır</value>
+  </data>
+  <data name="ApprovalHistory" xml:space="preserve">
+    <value>Onay Geçmişi</value>
+  </data>
+  <data name="PurchasingRequestPortal" xml:space="preserve">
+    <value>Satın Alma Talep Portalı</value>
+  </data>
+  <data name="PortalDescription" xml:space="preserve">
+    <value>Mubea çalışanları için tek noktadan, hızlı ve izlenebilir satın alma talep yönetimi.</value>
+  </data>
+  <data name="Feature1" xml:space="preserve">
+    <value>Online satın alma talebi oluşturma</value>
+  </data>
+  <data name="Feature2" xml:space="preserve">
+    <value>Talep durumunu anlık takip etme</value>
+  </data>
+  <data name="Feature3" xml:space="preserve">
+    <value>Dijital onay süreçleri</value>
+  </data>
+  <data name="Feature4" xml:space="preserve">
+    <value>Arşivlenmiş taleplere hızlı erişim</value>
+  </data>
+  <data name="LoginRequiredMessage" xml:space="preserve">
+    <value>Satın alma talebi oluşturmak için lütfen önce giriş yapınız.</value>
+  </data>
+  <data name="LoginToPortal" xml:space="preserve">
+    <value>Portala Giriş</value>
+  </data>
+  <data name="MyRequests" xml:space="preserve">
+    <value>Taleplerim</value>
+  </data>
+  <data name="Hello" xml:space="preserve">
+    <value>Merhaba</value>
+  </data>
+  <data name="MyRequestsDescription" xml:space="preserve">
+    <value>aşağıda sistemde açmış olduğunuz satın alma talepleri listelenmektedir.</value>
+  </data>
+  <data name="NoRequestsFound" xml:space="preserve">
+    <value>herhangi bir talebiniz bulunmamaktadır.</value>
+  </data>
+  <data name="FilterList" xml:space="preserve">
+    <value>Listeyi Filtrele</value>
+  </data>
+  <data name="FilterPlaceholder" xml:space="preserve">
+    <value>Talep No, Departman, Cost Center, Hizmet Tipi, Durum...</value>
+  </data>
+  <data name="FilterHint" xml:space="preserve">
+    <value>Yazdıkça aşağıdaki liste filtrelenir.</value>
+  </data>
+  <data name="CreationDate" xml:space="preserve">
+    <value>Oluşturma Tarihi</value>
+  </data>
+  <data name="Action" xml:space="preserve">
+    <value>İşlem</value>
+  </data>
+  <data name="CreateNewRequest" xml:space="preserve">
+    <value>Yeni Talep Oluştur</value>
+  </data>
+  <data name="PurchaseRequest" xml:space="preserve">
+    <value>Satın Alma Talebi</value>
+  </data>
+  <data name="BasicInformation" xml:space="preserve">
+    <value>Temel Bilgiler</value>
+  </data>
+  <data name="PleaseSelect" xml:space="preserve">
+    <value>Seçiniz...</value>
+  </data>
+  <data name="RequestLines" xml:space="preserve">
+    <value>Talep Satırları</value>
+  </data>
+  <data name="RequestLine" xml:space="preserve">
+    <value>Talep Satır</value>
+  </data>
+  <data name="New" xml:space="preserve">
+    <value>YENİ</value>
+  </data>
+  <data name="Spare" xml:space="preserve">
+    <value>YEDEK</value>
+  </data>
+  <data name="AddRequestLine" xml:space="preserve">
+    <value>Talep Satırı Ekle</value>
+  </data>
+  <data name="BackToHome" xml:space="preserve">
+    <value>Anasayfaya Dön</value>
+  </data>
+  <data name="Information" xml:space="preserve">
+    <value>Bilgi</value>
+  </data>
+  <data name="CreatePageInfo" xml:space="preserve">
+    <value>Bu ekranda:</value>
+  </data>
+  <data name="CreatingRequest" xml:space="preserve">
+    <value>numaralı talebi oluşturmaktasınız</value>
+  </data>
+  <data name="CanAddMultipleLines" xml:space="preserve">
+    <value>Satır ekleyerek çoklu talep oluşturabilirsiniz.</value>
+  </data>
+  <data name="PleaseFillRequiredFields" xml:space="preserve">
+    <value>Lütfen aşağıdaki zorunlu alanları doldurun</value>
+  </data>
+  <data name="RequestDetail" xml:space="preserve">
+    <value>Talep Detayı</value>
+  </data>
+  <data name="CreatingUser" xml:space="preserve">
+    <value>Oluşturan Kullanıcı</value>
+  </data>
+  <data name="RequestStatus" xml:space="preserve">
+    <value>Talep Durumu</value>
+  </data>
+  <data name="StatusDescription" xml:space="preserve">
+    <value>Durum Açıklaması</value>
+  </data>
+  <data name="YouCanApproveReject" xml:space="preserve">
+    <value>Bu talep üzerinde ONAY / RED yetkiniz bulunmaktadır.</value>
+  </data>
+  <data name="ApprovalRejectNote" xml:space="preserve">
+    <value>Onay / Red Notu</value>
+  </data>
+  <data name="Optional" xml:space="preserve">
+    <value>opsiyonel</value>
+  </data>
+  <data name="ApprovalNoteHint" xml:space="preserve">
+    <value>Onay veya red için açıklama girebilirsiniz.</value>
+  </data>
+  <data name="BackToPendingApprovals" xml:space="preserve">
+    <value>Bekleyen Onaylarıma Dön</value>
+  </data>
+  <data name="NoApprovalAuthority" xml:space="preserve">
+    <value>Bu talep üzerinde onay yetkiniz bulunmamaktadır veya talep bu aşamada değildir.</value>
+  </data>
+  <data name="Line" xml:space="preserve">
+    <value>Satır</value>
+  </data>
+  <data name="DateTime" xml:space="preserve">
+    <value>Tarih / Saat</value>
+  </data>
+  <data name="OldStatus" xml:space="preserve">
+    <value>Eski Durum</value>
+  </data>
+  <data name="NewStatus" xml:space="preserve">
+    <value>Yeni Durum</value>
+  </data>
+  <data name="ActionBy" xml:space="preserve">
+    <value>İşlem Yapan</value>
+  </data>
+  <data name="Level" xml:space="preserve">
+    <value>Seviye</value>
+  </data>
+  <data name="Note" xml:space="preserve">
+    <value>Onay / Red Notu</value>
+  </data>
+  <data name="NoApprovalHistory" xml:space="preserve">
+    <value>Bu talep için henüz herhangi bir onay / red kaydı bulunmamaktadır.</value>
+  </data>
+  <data name="DepartmentManager" xml:space="preserve">
+    <value>Departman Yöneticisi</value>
+  </data>
+  <data name="Purchasing" xml:space="preserve">
+    <value>Satın Alma</value>
+  </data>
+  <data name="GeneralManager" xml:space="preserve">
+    <value>Genel Müdür</value>
+  </data>
+  <data name="User" xml:space="preserve">
+    <value>Kullanıcı</value>
+  </data>
+  <data name="DateBasedRequestReport" xml:space="preserve">
+    <value>Tarih Bazlı Satın Alma Talep Raporu</value>
+  </data>
+  <data name="List" xml:space="preserve">
+    <value>Listele</value>
+  </data>
+  <data name="NoDetailLinesForRequest" xml:space="preserve">
+    <value>Bu talep için detay satırı bulunmamaktadır.</value>
+  </data>
+</root>

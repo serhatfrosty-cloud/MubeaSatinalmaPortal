@@ -1,7 +1,11 @@
 ﻿@model List<MubeaSatinalmaPortal.Models.RaporTalepViewModel>
 
+@using Microsoft.Extensions.Localization
+@using MubeaSatinalmaPortal.Resources
+@inject IStringLocalizer<SharedResources> Localizer
+
 @{
-    ViewData["Title"] = "Tarih Bazlı Talep Raporu";
+    ViewData["Title"] = Localizer["DateBasedRequestReport"];
 
     DateTime? baslangic = ViewBag.Baslangic as DateTime?;
     DateTime? bitis = ViewBag.Bitis as DateTime?;
@@ -11,13 +15,13 @@
 }
 
 <div class="container mt-4">
-    <h2 class="mb-3">Tarih Bazlı Satın Alma Talep Raporu</h2>
+    <h2 class="mb-3">@Localizer["DateBasedRequestReport"]</h2>
 
     <div class="card shadow-sm mb-4">
         <div class="card-body">
             <form method="get" class="row g-3 align-items-end">
                 <div class="col-md-3">
-                    <label class="form-label fw-semibold">Başlangıç Tarihi</label>
+                    <label class="form-label fw-semibold">@Localizer["StartDate"]</label>
                     <input type="date"
                            name="baslangic"
                            class="form-control"
@@ -25,7 +29,7 @@
                 </div>
 
                 <div class="col-md-3">
-                    <label class="form-label fw-semibold">Bitiş Tarihi</label>
+                    <label class="form-label fw-semibold">@Localizer["EndDate"]</label>
                     <input type="date"
                            name="bitis"
                            class="form-control"
@@ -34,7 +38,7 @@
 
                 <div class="col-md-3">
                     <button type="submit" class="btn btn-primary">
-                        Listele
+                        @Localizer["List"]
                     </button>
                 </div>
             </form>
@@ -84,10 +88,10 @@
                                 </div>
                                 <div class="row mt-1">
                                     <div class="col-md-3">
-                                        <small>Oluşturan: @item.CreatedByUser</small>
+                                        <small>@Localizer["CreatedBy"]: @item.CreatedByUser</small>
                                     </div>
                                     <div class="col-md-4">
-                                        <small>Durum: <strong>@item.TalepStatusKisa</strong></small>
+                                        <small>@Localizer["Status"]: <strong>@item.TalepStatusKisa</strong></small>
                                     </div>
                                     <div class="col-md-5">
                                         <small>@item.TalepStatusAciklama</small>
@@ -101,7 +105,7 @@
                          aria-labelledby="@headingId"
                          data-bs-parent="#talepAccordion">
                         <div class="accordion-body">
-                            <h6>Talep Satırları</h6>
+                            <h6>@Localizer["RequestLines"]</h6>
 
                             @if (item.Satirlar != null && item.Satirlar.Count > 0)
                             {
@@ -109,18 +113,18 @@
                                     <table class="table table-bordered table-sm align-middle">
                                         <thead class="table-light">
                                             <tr>
-                                                <th>Satır</th>
-                                                <th>Adet</th>
-                                                <th>Birim</th>
-                                                <th>Malzeme Tanımı</th>
-                                                <th>Talep Gerekçesi</th>
-                                                <th>Tavsiye Edilen Tedarikçi</th>
-                                                <th>Fiyat</th>
-                                                <th>Para Birimi</th>
-                                                <th>Tedarikçi Ürün Kodu</th>
-                                                <th>Talep Tipi</th>
-                                                <th>İhtiyaç Termini</th>
-                                                <th>Talep Eden</th>
+                                                <th>@Localizer["Line"]</th>
+                                                <th>@Localizer["Quantity"]</th>
+                                                <th>@Localizer["Unit"]</th>
+                                                <th>@Localizer["MaterialDescription"]</th>
+                                                <th>@Localizer["Reason"]</th>
+                                                <th>@Localizer["RecommendedSupplier"]</th>
+                                                <th>@Localizer["Price"]</th>
+                                                <th>@Localizer["Currency"]</th>
+                                                <th>@Localizer["SupplierProductCode"]</th>
+                                                <th>@Localizer["RequestType"]</th>
+                                                <th>@Localizer["RequirementDeadline"]</th>
+                                                <th>@Localizer["Requester"]</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -148,7 +152,7 @@
                             else
                             {
                                 <div class="alert alert-secondary">
-                                    Bu talep için detay satırı bulunmamaktadır.
+                                    @Localizer["NoDetailLinesForRequest"]
                                 </div>
                             }
                         </div>

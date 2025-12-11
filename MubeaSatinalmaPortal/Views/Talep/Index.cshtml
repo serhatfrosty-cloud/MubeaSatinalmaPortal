@@ -1,15 +1,18 @@
 ﻿@model List<MubeaSatinalmaPortal.Models.TalepListItemViewModel>
 
-@{
-    ViewData["Title"] = "Taleplerim";
+@using Microsoft.Extensions.Localization
+@using MubeaSatinalmaPortal.Resources
+@inject IStringLocalizer<SharedResources> Localizer
 
+@{
+    ViewData["Title"] = Localizer["MyRequests"];
     string currentUser = ViewBag.CurrentUser as string ?? "KULLANICI";
 }
 
 <div class="container mt-4">
-    <h2 class="mb-2">Taleplerim</h2>
+    <h2 class="mb-2">@Localizer["MyRequests"]</h2>
     <p class="text-muted mb-3">
-        Merhaba <strong>@currentUser</strong>, aşağıda sistemde açmış olduğunuz satın alma talepleri listelenmektedir.
+        @Localizer["Hello"] <strong>@currentUser</strong>, @Localizer["MyRequestsDescription"]
     </p>
 
     @if (TempData["SaveError"] != null)
@@ -29,20 +32,20 @@
     @if (Model == null || !Model.Any())
     {
         <div class="alert alert-info">
-            Merhaba <strong>@currentUser</strong>, herhangi bir talebiniz bulunmamaktadır.
+            @Localizer["Hello"] <strong>@currentUser</strong>, @Localizer["NoRequestsFound"]
         </div>
     }
     else
     {
         <div class="mb-3">
-            <label class="form-label fw-semibold">Listeyi Filtrele</label>
+            <label class="form-label fw-semibold">@Localizer["FilterList"]</label>
             <input type="text"
                    id="filterInput"
                    class="form-control"
-                   placeholder="Talep No, Departman, Cost Center, Hizmet Tipi, Durum..."
+                   placeholder="@Localizer["FilterPlaceholder"]"
                    onkeyup="filterTable()" />
             <small class="text-muted">
-                Yazdıkça aşağıdaki liste filtrelenir.
+                @Localizer["FilterHint"]
             </small>
         </div>
 
@@ -50,14 +53,14 @@
             <table class="table table-striped table-hover table-sm" id="talepListTable">
                 <thead class="table-light">
                     <tr>
-                        <th>Talep No</th>
-                        <th>Oluşturma Tarihi</th>
-                        <th>Departman</th>
-                        <th>Cost Center</th>
-                        <th>Hizmet Tipi</th>
-                        <th>Durum</th>
-                        <th>Durum Açıklaması</th>
-                        <th style="width:110px;">İşlem</th>
+                        <th>@Localizer["RequestNo"]</th>
+                        <th>@Localizer["CreationDate"]</th>
+                        <th>@Localizer["Department"]</th>
+                        <th>@Localizer["CostCenter"]</th>
+                        <th>@Localizer["ServiceType"]</th>
+                        <th>@Localizer["Status"]</th>
+                        <th>@Localizer["StatusDescription"]</th>
+                        <th style="width:110px;">@Localizer["Action"]</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -76,7 +79,7 @@
                                    asp-action="Detay"
                                    asp-route-id="@item.TalepID"
                                    class="btn btn-sm btn-outline-primary">
-                                    Detay
+                                    @Localizer["Details"]
                                 </a>
                             </td>
                         </tr>
@@ -95,7 +98,7 @@
             var table = document.getElementById("talepListTable");
             var tr = table.getElementsByTagName("tr");
 
-            for (var i = 1; i < tr.length; i++) { // 0. satır header
+            for (var i = 1; i < tr.length; i++) {
                 var tds = tr[i].getElementsByTagName("td");
                 var rowText = "";
 

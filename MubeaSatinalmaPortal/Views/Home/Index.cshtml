@@ -1,4 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Http
+@using Microsoft.Extensions.Localization
+@using MubeaSatinalmaPortal.Resources
+@inject IStringLocalizer<SharedResources> Localizer
 
 @{
     ViewData["Title"] = "Mubea Satın Alma Portalı";
@@ -57,33 +60,30 @@
             <!-- SOL TARAF: Tanıtım + Talep Oluştur -->
             <div class="col-lg-7">
                 <h1 class="display-4 fw-bold mb-3">
-                    Mubea <span class="text-primary">Satın Alma Talep Portalı</span>
+                    Mubea <span class="text-primary">@Localizer["PurchasingRequestPortal"]</span>
                 </h1>
 
                 <p class="lead mb-4">
-                    Mubea çalışanları için tek noktadan, hızlı ve izlenebilir satın alma talep yönetimi.
-                    Şeffaf, standart ve takip edilebilir süreçler ile IT tarafından geliştirilmiştir.
+                    @Localizer["PortalDescription"]
                 </p>
 
                 <ul class="feature-list mb-4">
-                    <li>📝 Online satın alma talebi oluşturma</li>
-                    <li>📊 Talep durumunu anlık takip etme</li>
-                    <li>✅ Dijital onay süreçleri</li>
-                    <li>📂 Arşivlenmiş taleplere hızlı erişim</li>
+                    <li>📝 @Localizer["Feature1"]</li>
+                    <li>📊 @Localizer["Feature2"]</li>
+                    <li>✅ @Localizer["Feature3"]</li>
+                    <li>📂 @Localizer["Feature4"]</li>
                 </ul>
-
                 @if (kullaniciLoginMi)
                 {
                     <!-- Login olmuş kullanıcı için buton -->
-                    <a asp-controller="Talep" asp-action="Create"
-                       class="btn btn-success btn-lg px-4">
-                        Satın Alma Talep Oluştur
+                    <a asp-controller="Talep" asp-action="Create" class="btn btn-success btn-lg px-4">
+                        @Localizer["CreateRequest"]
                     </a>
                 }
                 else
                 {
                     <p class="text-muted small">
-                        Satın alma talebi oluşturmak için lütfen önce giriş yapınız.
+                        @Localizer["LoginRequiredMessage"]
                     </p>
                 }
             </div>
@@ -93,22 +93,20 @@
             {
                 <div class="col-lg-5 mt-4 mt-lg-0">
                     <div class="info-card shadow-lg p-4 bg-white">
-                        <h5 class="fw-bold mb-3 text-center">Portala Giriş</h5>
+                        <h5 class="fw-bold mb-3 text-center">@Localizer["LoginToPortal"]</h5>
 
                         <form asp-controller="Account" asp-action="Login" method="post">
                             <div class="mb-3">
-                                <label class="form-label">Kullanıcı</label>
+                                <label class="form-label">@Localizer["Username"]</label>
                                 <input type="text" name="username" class="form-control" required />
                             </div>
 
                             <div class="mb-3">
-                                <label class="form-label">Şifre</label>
+                                <label class="form-label">@Localizer["Password"]</label>
                                 <input type="password" name="password" class="form-control" required />
                             </div>
 
-                            <button type="submit" class="btn btn-primary w-100">
-                                Giriş Yap
-                            </button>
+                            <button type="submit" class="btn btn-primary w-100">@Localizer["Login"]</button>
                         </form>
 
                         <hr class="my-4" />

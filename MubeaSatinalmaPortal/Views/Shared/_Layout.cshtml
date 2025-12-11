@@ -1,4 +1,8 @@
 ﻿@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Localization
+@using Microsoft.Extensions.Localization
+@using MubeaSatinalmaPortal.Resources
+@inject IStringLocalizer<SharedResources> Localizer
 
 <!DOCTYPE html>
 <html lang="tr">
@@ -85,7 +89,7 @@
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <!-- HERKES İÇİN GÖRÜNEN -->
                     <li class="nav-item">
-                        <a class="nav-link" asp-controller="Home" asp-action="Index">Anasayfa</a>
+                        <a class="nav-link" asp-controller="Home" asp-action="Index">@Localizer["Welcome"]</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="https://10.37.1.9/duyuru_ekrani/">Duyuru Ekranı</a>
@@ -99,36 +103,93 @@
                     {
                         <!-- Giriş yapan herkes için -->
                         <li class="nav-item">
-                            <a class="nav-link" asp-controller="Talep" asp-action="Create">
-                                Yeni Talep Oluştur
-                            </a>
+                            <a class="nav-link" asp-controller="Talep" asp-action="Create">@Localizer["CreateRequest"]</a>
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link" asp-controller="Talep" asp-action="Index">
-                                Talep Listesi
-                            </a>
+                            <a class="nav-link" asp-controller="Talep" asp-action="Index">@Localizer["RequestList"]</a>
                         </li>
 
                         @* SADECE ONAY YETKİSİ OLANLAR (YÖNETİCİ / SATINALMA / GENEL MÜDÜR) *@
                         @if (onayYetkisiVar)
                         {
                             <li class="nav-item">
-                                <a class="nav-link" asp-controller="Talep" asp-action="OnayBekleyenler">
-                                    Bekleyen Onaylarım
-                                </a>
+                                <a class="nav-link" asp-controller="Talep" asp-action="OnayBekleyenler">@Localizer["PendingApprovals"]</a>
                             </li>
                         }
 
                         @* Raporlar ileride genişletilebilir *@
                         <li class="nav-item">
-                            <a class="nav-link" asp-controller="Rapor" asp-action="Index">
-                                Raporlar
-                            </a>
+                            <a class="nav-link" asp-controller="Rapor" asp-action="Index">@Localizer["Reports"]</a>
                         </li>
                     }
                 </ul>
+                <!-- 🌍 DİL SEÇİCİ DROPDOWN -->
+                <div class="dropdown me-3">
+                    @{
+                        // Mevcut dili tespit et
+                        var requestCulture = Context.Features.Get<IRequestCultureFeature>();
+                        var currentCulture = requestCulture.RequestCulture.Culture.Name;
 
+                        // Bayrak emoji'sini belirle
+                        var flagIcon = currentCulture switch
+                        {
+                            "tr-TR" => "🇹🇷",
+                            "en-US" => "🇬🇧",
+                            "de-DE" => "🇩🇪",
+                            _ => "🌍"
+                        };
+
+                        // Dil adını belirle
+                        var langName = currentCulture switch
+                        {
+                            "tr-TR" => "Türkçe",
+                            "en-US" => "English",
+                            "de-DE" => "Deutsch",
+                            _ => "Language"
+                        };
+                    }
+
+                    <!-- Dropdown butonu -->
+                    <button class="btn btn-sm btn-outline-light dropdown-toggle"
+                            type="button"
+                            id="languageDropdown"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                        @flagIcon @langName
+                    </button>
+
+                    <!-- Dropdown menü -->
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="languageDropdown">
+                        <li>
+                            <a class="dropdown-item @(currentCulture == "tr-TR" ? "active" : "")"
+                               asp-controller="Language"
+                               asp-action="SetLanguage"
+                               asp-route-culture="tr-TR"
+                               asp-route-returnUrl="@Context.Request.Path">
+                                🇹🇷 Türkçe
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item @(currentCulture == "en-US" ? "active" : "")"
+                               asp-controller="Language"
+                               asp-action="SetLanguage"
+                               asp-route-culture="en-US"
+                               asp-route-returnUrl="@Context.Request.Path">
+                                🇬🇧 English
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item @(currentCulture == "de-DE" ? "active" : "")"
+                               asp-controller="Language"
+                               asp-action="SetLanguage"
+                               asp-route-culture="de-DE"
+                               asp-route-returnUrl="@Context.Request.Path">
+                                🇩🇪 Deutsch
+                            </a>
+                        </li>
+                    </ul>
+                </div>
                 <!-- SAĞ TARAFTAKİ KULLANICI / GİRİŞ - ÇIKIŞ ALANI -->
                 <div class="d-flex align-items-center">
                     @if (kullaniciLoginMi)
@@ -136,17 +197,11 @@
                         <span class="me-3 text-light small">
                             @(!string.IsNullOrEmpty(displayName) ? displayName : Context.Session.GetString("User"))
                         </span>
-                        <a asp-controller="Account" asp-action="Logout"
-                           class="btn btn-outline-light btn-sm btn-login px-3">
-                            Çıkış Yap
-                        </a>
+                        <a ... class="btn btn-outline-light btn-sm btn-login px-3">@Localizer["Logout"]</a>
                     }
                     else
                     {
-                        <a asp-controller="Home" asp-action="Index"
-                           class="btn btn-outline-light btn-sm btn-login px-3">
-                            Giriş Yap
-                        </a>
+                        <a ... class="btn btn-outline-light btn-sm btn-login px-3">@Localizer["Login"]</a>
                     }
                 </div>
             </div>

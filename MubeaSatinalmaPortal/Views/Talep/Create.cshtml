@@ -1,6 +1,9 @@
-﻿@{
-    ViewData["Title"] = "Satın Alma Talep Oluştur";
+﻿@using Microsoft.Extensions.Localization
+@using MubeaSatinalmaPortal.Resources
+@inject IStringLocalizer<SharedResources> Localizer
 
+@{
+    ViewData["Title"] = Localizer["CreateNewRequest"];
     var talepNo = ViewBag.TalepNo as string ?? "MPXXXXXXXX";
 }
 
@@ -8,174 +11,100 @@
     .uppercase {
         text-transform: uppercase;
     }
-
-    /* Zorunlu alanlar için kırmızı border */
-    .required-field {
-        border: 2px solid #dc3545 !important;
-    }
-
-    /* Satır silme butonu */
-    .btn-delete-row {
-        padding: 0.25rem 0.5rem;
-        font-size: 0.875rem;
-    }
-
-    /* Satır numarası kolonu */
-    .row-number {
-        background-color: #f8f9fa;
-        font-weight: bold;
-        text-align: center;
-        vertical-align: middle;
-    }
 </style>
 
 <div class="container mt-4">
-    <h2 class="mb-4">@talepNo Satın Alma Talebi</h2>
-
-    <!-- Hata mesajları -->
-    @if (ViewBag.Error != null)
-    {
-        <div class="alert alert-danger alert-dismissible fade show">
-            <strong>⚠️ Hata:</strong> @ViewBag.Error
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    }
+    <h2 class="mb-4">@talepNo @Localizer["PurchaseRequest"]</h2>
 
     <div class="card shadow p-4 mb-4">
-        <h5 class="mb-3">Temel Bilgiler</h5>
+        <h5 class="mb-3">@Localizer["BasicInformation"]</h5>
 
-        <form method="post" id="talepForm">
-            <!-- TalepNo'yu POST ile göndermek için gizli alan -->
+        <form method="post">
             <input type="hidden" name="TalepNo" value="@talepNo" />
 
             <div class="row g-3 mb-4">
                 <div class="col-md-4">
-                    <label class="form-label">Departman <span class="text-danger">*</span></label>
-                    <select class="form-select" name="DepartmanID" id="DepartmanID" required asp-items="ViewBag.DepartmanList">
-                        <option value="">Seçiniz...</option>
+                    <label class="form-label">@Localizer["Department"]</label>
+                    <select class="form-select" name="DepartmanID" asp-items="ViewBag.DepartmanList">
+                        <option value="">@Localizer["PleaseSelect"]</option>
                     </select>
                 </div>
 
                 <div class="col-md-4">
-                    <label class="form-label">Masraf Merkezi (Cost Center) <span class="text-danger">*</span></label>
-                    <select class="form-select" name="CostCenterID" id="CostCenterID" required asp-items="ViewBag.CostCenterList">
-                        <option value="">Seçiniz...</option>
+                    <label class="form-label">@Localizer["CostCenter"]</label>
+                    <select class="form-select" name="CostCenterID" asp-items="ViewBag.CostCenterList">
+                        <option value="">@Localizer["PleaseSelect"]</option>
                     </select>
                 </div>
 
                 <div class="col-md-4">
-                    <label class="form-label">Hizmet Tipi <span class="text-danger">*</span></label>
-                    <select class="form-select" name="HizmetID" id="HizmetID" required asp-items="ViewBag.HizmetTipiList">
-                        <option value="">Seçiniz...</option>
+                    <label class="form-label">@Localizer["ServiceType"]</label>
+                    <select class="form-select" name="HizmetID" asp-items="ViewBag.HizmetTipiList">
+                        <option value="">@Localizer["PleaseSelect"]</option>
                     </select>
                 </div>
             </div>
 
-            <h5 class="mb-3">
-                Talep Satırları
-                <span class="badge bg-info" id="rowCountBadge">1 Satır</span>
-            </h5>
-
-            <div class="alert alert-warning mb-3">
-                <strong>⚠️ Önemli:</strong>
-                <ul class="mb-0">
-                    <li>En az <strong>1 satır</strong> eklenmelidir</li>
-                    <li><strong>Malzeme Tanımı</strong> alanı zorunludur</li>
-                    <li>Boş satırlar silinmelidir</li>
-                </ul>
-            </div>
+            <h5 class="mb-3">@Localizer["RequestLines"]</h5>
 
             <div class="table-responsive mb-3">
-                <table class="table table-bordered table-sm align-middle" id="talepTable">
+                <table class="table table-bordered table-sm align-middle">
                     <thead class="table-light">
                         <tr>
-                            <th style="width: 50px;">Satır</th>
-                            <th style="width: 100px;">Talep Adet</th>
-                            <th style="width: 100px;">Birim</th>
-                            <th style="width: 200px;">Malzeme Tanımı <span class="text-danger">*</span></th>
-                            <th style="width: 150px;">Talep Gerekçesi</th>
-                            <th style="width: 150px;">Tavsiye Edilen Tedarikçi</th>
-                            <th style="width: 100px;">Fiyat</th>
-                            <th style="width: 80px;">Para Birimi</th>
-                            <th style="width: 120px;">Tedarikçi Ürün Kodu</th>
-                            <th style="width: 120px;">Talep Tipi</th>
-                            <th style="width: 130px;">İhtiyaç Termini</th>
-                            <th style="width: 120px;">Talep Eden</th>
-                            <th style="width: 80px;">İşlem</th>
+                            <th>@Localizer["RequestLine"]</th>
+                            <th>@Localizer["Quantity"]</th>
+                            <th>@Localizer["Unit"]</th>
+                            <th>@Localizer["MaterialDescription"]</th>
+                            <th>@Localizer["Reason"]</th>
+                            <th>@Localizer["RecommendedSupplier"]</th>
+                            <th>@Localizer["Price"]</th>
+                            <th>@Localizer["Currency"]</th>
+                            <th>@Localizer["SupplierProductCode"]</th>
+                            <th>@Localizer["RequestType"]</th>
+                            <th>@Localizer["RequirementDeadline"]</th>
+                            <th>@Localizer["Requester"]</th>
                         </tr>
                     </thead>
 
                     <tbody id="talepRowsBody">
-                        <!-- 1. satır -->
-                        <tr data-row-id="1">
-                            <td class="row-number">1</td>
-
+                        <tr>
+                            <td class="text-center talep-row-index">1</td>
                             <td>
-                                <input type="number" step="0.01" class="form-control form-control-sm"
-                                       name="TalepAdet" placeholder="0" />
+                                <input type="number" step="0.01" class="form-control form-control-sm" name="TalepAdet" />
                             </td>
-
                             <td>
-                                <input type="text" class="form-control form-control-sm uppercase"
-                                       name="TalepBirim" placeholder="ADET" />
+                                <input type="text" class="form-control form-control-sm uppercase" name="TalepBirim" />
                             </td>
-
                             <td>
-                                <input type="text" class="form-control form-control-sm uppercase required-input"
-                                       name="TalepMalzeme" placeholder="Zorunlu alan" required />
+                                <input type="text" class="form-control form-control-sm uppercase" name="TalepMalzeme" />
                             </td>
-
                             <td>
-                                <input type="text" class="form-control form-control-sm uppercase"
-                                       name="TalepGerekce" />
+                                <input type="text" class="form-control form-control-sm uppercase" name="TalepGerekce" />
                             </td>
-
                             <td>
-                                <input type="text" class="form-control form-control-sm uppercase"
-                                       name="TavsiyeTedarikci" />
+                                <input type="text" class="form-control form-control-sm uppercase" name="TavsiyeTedarikci" />
                             </td>
-
                             <td>
-                                <input type="number" step="0.01" class="form-control form-control-sm"
-                                       name="TalepFiyat" placeholder="0.00" />
+                                <input type="number" step="0.01" class="form-control form-control-sm" name="TalepFiyat" />
                             </td>
-
                             <td>
-                                <select class="form-select form-select-sm uppercase" name="FiyatParaBirimi">
-                                    <option value="">Seç</option>
-                                    <option value="TL">TL</option>
-                                    <option value="USD">USD</option>
-                                    <option value="EUR">EUR</option>
-                                </select>
+                                <input type="text" class="form-control form-control-sm uppercase" name="FiyatParaBirimi" placeholder="EUR, USD, TL" />
                             </td>
-
                             <td>
-                                <input type="text" class="form-control form-control-sm uppercase"
-                                       name="TedarikciUrunKodu" />
+                                <input type="text" class="form-control form-control-sm uppercase" name="TedarikciUrunKodu" />
                             </td>
-
                             <td>
                                 <select class="form-select form-select-sm uppercase" name="TalepTipi">
-                                    <option value="">SEÇİNİZ</option>
-                                    <option value="YENİ">YENİ</option>
-                                    <option value="YEDEK">YEDEK</option>
+                                    <option value="">@Localizer["PleaseSelect"]</option>
+                                    <option value="YENİ">@Localizer["New"]</option>
+                                    <option value="YEDEK">@Localizer["Spare"]</option>
                                 </select>
                             </td>
-
                             <td>
                                 <input type="date" class="form-control form-control-sm" name="TalepTermin" />
                             </td>
-
                             <td>
-                                <input type="text" class="form-control form-control-sm uppercase"
-                                       name="TalepEdenKisi" />
-                            </td>
-
-                            <td>
-                                <button type="button" class="btn btn-danger btn-sm btn-delete-row"
-                                        onclick="deleteRow(this)" title="Satırı Sil">
-                                    🗑️
-                                </button>
+                                <input type="text" class="form-control form-control-sm uppercase" name="TalepEdenKisi" />
                             </td>
                         </tr>
                     </tbody>
@@ -183,223 +112,104 @@
             </div>
 
             <button type="button" class="btn btn-outline-primary btn-sm mb-4" onclick="addTalepRow()">
-                ➕ Talep Satırı Ekle
+                + @Localizer["AddRequestLine"]
             </button>
 
             <hr class="my-4" />
 
             <div class="d-flex justify-content-between">
-                <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">← Anasayfaya Dön</a>
-                <button type="submit" class="btn btn-primary" id="submitBtn">💾 Kaydet</button>
+                <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">← @Localizer["BackToHome"]</a>
+                <button type="submit" class="btn btn-primary">@Localizer["Save"]</button>
             </div>
         </form>
     </div>
 
     <div class="alert alert-info">
-        <strong>📝 Bilgi:</strong>
-        <ul class="mb-0">
-            <li>@talepNo numaralı talebi oluşturmaktasınız</li>
-            <li>➕ butonu ile yeni satır ekleyebilirsiniz</li>
-            <li>🗑️ butonu ile satır silebilirsiniz</li>
-            <li><strong>Malzeme Tanımı</strong> her satır için zorunludur</li>
+        <strong>@Localizer["Information"]:</strong> @Localizer["CreatePageInfo"]
+        <ul>
+            <li>@Localizer["CreatingRequest"] @talepNo.</li>
+            <li>@Localizer["CanAddMultipleLines"]</li>
         </ul>
     </div>
 </div>
 
 @section Scripts {
     <script>
-        let rowCounter = 1;
-
-        // ========================================
-        // 1️⃣ UPPERCASE - Otomatik büyük harf
-        // ========================================
         document.addEventListener("input", function (e) {
             if (e.target.classList.contains("uppercase")) {
                 e.target.value = e.target.value.toUpperCase();
             }
         });
 
-        // ========================================
-        // 2️⃣ YENİ SATIR EKLE
-        // ========================================
         function addTalepRow() {
-            rowCounter++;
             var tbody = document.getElementById("talepRowsBody");
+            var count = tbody.getElementsByTagName("tr").length + 1;
 
             var row = document.createElement("tr");
-            row.setAttribute("data-row-id", rowCounter);
 
             row.innerHTML = `
-                <td class="row-number">${rowCounter}</td>
-
-                <td><input type="number" step="0.01" class="form-control form-control-sm" name="TalepAdet" placeholder="0" /></td>
-
-                <td><input type="text" class="form-control form-control-sm uppercase" name="TalepBirim" placeholder="ADET" /></td>
-
-                <td><input type="text" class="form-control form-control-sm uppercase required-input" name="TalepMalzeme" placeholder="Zorunlu alan" required /></td>
-
+                <td class="text-center talep-row-index">${count}</td>
+                <td><input type="number" step="0.01" class="form-control form-control-sm" name="TalepAdet" /></td>
+                <td><input type="text" class="form-control form-control-sm uppercase" name="TalepBirim" /></td>
+                <td><input type="text" class="form-control form-control-sm uppercase" name="TalepMalzeme" /></td>
                 <td><input type="text" class="form-control form-control-sm uppercase" name="TalepGerekce" /></td>
-
                 <td><input type="text" class="form-control form-control-sm uppercase" name="TavsiyeTedarikci" /></td>
-
-                <td><input type="number" step="0.01" class="form-control form-control-sm" name="TalepFiyat" placeholder="0.00" /></td>
-
-                <td>
-                    <select class="form-select form-select-sm uppercase" name="FiyatParaBirimi">
-                        <option value="">Seç</option>
-                        <option value="TL">TL</option>
-                        <option value="USD">USD</option>
-                        <option value="EUR">EUR</option>
-                    </select>
-                </td>
-
+                <td><input type="number" step="0.01" class="form-control form-control-sm" name="TalepFiyat" /></td>
+                <td><input type="text" class="form-control form-control-sm uppercase" name="FiyatParaBirimi" /></td>
                 <td><input type="text" class="form-control form-control-sm uppercase" name="TedarikciUrunKodu" /></td>
-
                 <td>
                     <select class="form-select form-select-sm uppercase" name="TalepTipi">
-                        <option value="">SEÇİNİZ</option>
-                        <option value="YENİ">YENİ</option>
-                        <option value="YEDEK">YEDEK</option>
+                        <option value="">@Localizer["PleaseSelect"]</option>
+                        <option value="YENİ">@Localizer["New"]</option>
+                        <option value="YEDEK">@Localizer["Spare"]</option>
                     </select>
                 </td>
-
                 <td><input type="date" class="form-control form-control-sm" name="TalepTermin" /></td>
-
                 <td><input type="text" class="form-control form-control-sm uppercase" name="TalepEdenKisi" /></td>
-
-                <td>
-                    <button type="button" class="btn btn-danger btn-sm btn-delete-row" onclick="deleteRow(this)" title="Satırı Sil">
-                        🗑️
-                    </button>
-                </td>
             `;
 
             tbody.appendChild(row);
-            updateRowNumbers();
         }
 
-        // ========================================
-        // 3️⃣ SATIR SİL
-        // ========================================
-        function deleteRow(button) {
-            var tbody = document.getElementById("talepRowsBody");
-            var rowCount = tbody.getElementsByTagName("tr").length;
-
-            // En az 1 satır kalmalı
-            if (rowCount <= 1) {
-                alert("⚠️ En az 1 satır olmalıdır! Tüm satırları silemezsiniz.");
-                return;
-            }
-
-            // Onay sor
-            if (confirm("Bu satırı silmek istediğinize emin misiniz?")) {
-                var row = button.closest("tr");
-                row.remove();
-                updateRowNumbers();
-            }
-        }
-
-        // ========================================
-        // 4️⃣ SATIR NUMARALARINI GÜNCELLE
-        // ========================================
-        function updateRowNumbers() {
-            var tbody = document.getElementById("talepRowsBody");
-            var rows = tbody.getElementsByTagName("tr");
-
-            for (var i = 0; i < rows.length; i++) {
-                var rowNumberCell = rows[i].querySelector(".row-number");
-                if (rowNumberCell) {
-                    rowNumberCell.textContent = i + 1;
-                }
-            }
-
-            // Badge güncelle
-            var badge = document.getElementById("rowCountBadge");
-            badge.textContent = rows.length + " Satır";
-        }
-
-        // ========================================
-        // 5️⃣ FORM SUBMIT - VALIDASYON
-        // ========================================
-        document.getElementById("talepForm").addEventListener("submit", function (e) {
-            var errors = [];
-
-            // Departman, CostCenter, Hizmet kontrolü
-            var departman = document.getElementById("DepartmanID").value;
-            var costCenter = document.getElementById("CostCenterID").value;
-            var hizmet = document.getElementById("HizmetID").value;
-
-            if (!departman || departman === "0" || departman === "") {
-                errors.push("❌ Departman seçilmelidir");
-                document.getElementById("DepartmanID").classList.add("required-field");
-            } else {
-                document.getElementById("DepartmanID").classList.remove("required-field");
-            }
-
-            if (!costCenter || costCenter === "0" || costCenter === "") {
-                errors.push("❌ Masraf Merkezi seçilmelidir");
-                document.getElementById("CostCenterID").classList.add("required-field");
-            } else {
-                document.getElementById("CostCenterID").classList.remove("required-field");
-            }
-
-            if (!hizmet || hizmet === "0" || hizmet === "") {
-                errors.push("❌ Hizmet Tipi seçilmelidir");
-                document.getElementById("HizmetID").classList.add("required-field");
-            } else {
-                document.getElementById("HizmetID").classList.remove("required-field");
-            }
-
-            // Satır kontrolü
-            var tbody = document.getElementById("talepRowsBody");
-            var rows = tbody.getElementsByTagName("tr");
-            var validRowCount = 0;
-
-            for (var i = 0; i < rows.length; i++) {
-                var malzemeInput = rows[i].querySelector('input[name="TalepMalzeme"]');
-                var malzemeValue = malzemeInput.value.trim();
-
-                if (malzemeValue === "") {
-                    malzemeInput.classList.add("required-field");
-                    errors.push(`❌ ${i + 1}. satırda Malzeme Tanımı boş olamaz`);
-                } else {
-                    malzemeInput.classList.remove("required-field");
-                    validRowCount++;
-                }
-            }
-
-            // En az 1 geçerli satır olmalı
-            if (validRowCount === 0) {
-                errors.push("❌ En az 1 satır doldurulmalıdır");
-            }
-
-            // Hata varsa göster
-            if (errors.length > 0) {
-                e.preventDefault();
-                alert("⚠️ LÜTFEN HATALARI DÜZELTİN:\n\n" + errors.join("\n"));
-                return false;
-            }
-
-            // Her şey tamam - form gönderilecek
-            return true;
-        });
-
-        // ========================================
-        // 6️⃣ GERÇEK ZAMANLI VALIDASYON
-        // ========================================
-        document.addEventListener("blur", function (e) {
-            if (e.target.classList.contains("required-input")) {
-                if (e.target.value.trim() === "") {
-                    e.target.classList.add("required-field");
-                } else {
-                    e.target.classList.remove("required-field");
-                }
-            }
-        }, true);
-
-        // Sayfa yüklendiğinde
         document.addEventListener("DOMContentLoaded", function () {
-            updateRowNumbers();
+            var form = document.querySelector("form");
+            if (!form) return;
+
+            form.addEventListener("submit", function (e) {
+                var eksikler = [];
+                var departman = form.querySelector('select[name="DepartmanID"]');
+                var costcenter = form.querySelector('select[name="CostCenterID"]');
+                var hizmet = form.querySelector('select[name="HizmetID"]');
+
+                [departman, costcenter, hizmet].forEach(function (el) {
+                    if (el) el.classList.remove("is-invalid");
+                });
+
+                if (departman && (departman.value === "" || departman.value === "0")) {
+                    eksikler.push("@Localizer["Department"]");
+                    departman.classList.add("is-invalid");
+                }
+
+                if (costcenter && (costcenter.value === "" || costcenter.value === "0")) {
+                    eksikler.push("@Localizer["CostCenter"]");
+                    costcenter.classList.add("is-invalid");
+                }
+
+                if (hizmet && (hizmet.value === "" || hizmet.value === "0")) {
+                    eksikler.push("@Localizer["ServiceType"]");
+                    hizmet.classList.add("is-invalid");
+                }
+
+                if (eksikler.length > 0) {
+                    var msg = "@Localizer["PleaseFillRequiredFields"]:\n\n";
+                    for (var i = 0; i < eksikler.length; i++) {
+                        msg += "- " + eksikler[i] + "\n";
+                    }
+                    alert(msg);
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+            });
         });
     </script>
 }
