@@ -153,13 +153,7 @@
                         @flagIcon @langName
                     </button>
 
-                    <!-- DEBUG -->
-                    <div class="alert alert-warning small">
-                        <strong>DEBUG:</strong><br />
-                        Culture: @(Context.Features.Get<IRequestCultureFeature>()?.RequestCulture.Culture.Name ?? "NULL")<br />
-                        Cookie: @Context.Request.Cookies[".AspNetCore.Culture"]<br />
-                        Localizer["Welcome"]: @Localizer["Welcome"]
-                    </div>
+                    
 
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="languageDropdown">
                         <li>

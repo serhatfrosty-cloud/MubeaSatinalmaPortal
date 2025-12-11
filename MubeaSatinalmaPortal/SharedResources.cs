@@ -1,4 +1,4 @@
-﻿namespace MubeaSatinalmaPortal.Resources
+﻿namespace MubeaSatinalmaPortal
 {
     public class SharedResources
     {

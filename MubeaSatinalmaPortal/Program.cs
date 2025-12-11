@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Options;
-using MubeaSatinalmaPortal.Resources; // ← BU SATIRI EKLEYİN
+using MubeaSatinalmaPortal;
 
 
 var builder = WebApplication.CreateBuilder(args);
