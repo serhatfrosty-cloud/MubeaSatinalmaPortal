@@ -265,25 +265,25 @@
     <value>Login to Portal</value>
   </data>
   <data name="MyRequests" xml:space="preserve">
-    <value>My Requests</value>
+    <value>My Purchase Requests</value>
   </data>
   <data name="Hello" xml:space="preserve">
     <value>Hello</value>
   </data>
   <data name="MyRequestsDescription" xml:space="preserve">
-    <value>your purchasing requests in the system are listed below.</value>
+    <value>The purchase requests you created in the system are listed below.</value>
   </data>
   <data name="NoRequestsFound" xml:space="preserve">
-    <value>you have no requests.</value>
+    <value>You do not have any requests.</value>
   </data>
   <data name="FilterList" xml:space="preserve">
-    <value>Filter List</value>
+    <value>Filter the List</value>
   </data>
   <data name="FilterPlaceholder" xml:space="preserve">
-    <value>Request No, Department, Cost Center, Service Type, Status...</value>
+    <value>Request No., Department, Cost Center, Service Type, Status...</value>
   </data>
   <data name="FilterHint" xml:space="preserve">
-    <value>The list below is filtered as you type.</value>
+    <value>The list below filters automatically as you type.</value>
   </data>
   <data name="CreationDate" xml:space="preserve">
     <value>Creation Date</value>
@@ -292,7 +292,7 @@
     <value>Action</value>
   </data>
   <data name="CreateNewRequest" xml:space="preserve">
-    <value>Create New Request</value>
+    <value>Create a New Request</value>
   </data>
   <data name="PurchaseRequest" xml:space="preserve">
     <value>Purchase Request</value>
