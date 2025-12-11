@@ -1,35 +1,27 @@
 ﻿@using Microsoft.AspNetCore.Http
-@using Microsoft.Extensions.Localization
-@using MubeaSatinalmaPortal.Resources
-@inject IStringLocalizer<SharedResources> Localizer
 
 @{
-    ViewData["Title"] = "Mubea Satın Alma Portalı";
-
+    ViewData["Title"] = Localizer["PurchasingRequestPortal"];
     bool kullaniciLoginMi = Context.Session.GetString("User") != null;
-
-    // Yetki hatası kontrolü (URL'den gelen error parametresi)
     string errorParam = Context.Request.Query["error"];
 }
 
-<!-- YENİ: Yetki hatası mesajı -->
 @if (!string.IsNullOrEmpty(errorParam))
 {
     if (errorParam == "unauthorized")
     {
         <div class="alert alert-danger text-center m-0">
-            ⚠️ Bu sayfayı görüntüleme yetkiniz bulunmamaktadır. Lütfen sistem yöneticinize başvurun.
+            ⚠️ @Localizer["UnauthorizedAccess"]
         </div>
     }
     else if (errorParam == "no_department")
     {
         <div class="alert alert-warning text-center m-0">
-            ⚠️ Departman bilginiz sistemde tanımlı değil. Lütfen sistem yöneticinize başvurun.
+            ⚠️ @Localizer["NoDepartmentInfo"]
         </div>
     }
 }
 
-<!-- Talep kayıt başarılı mesajı -->
 @if (TempData["SaveSuccess"] != null)
 {
     <div class="alert alert-success text-center m-0">
@@ -37,7 +29,6 @@
     </div>
 }
 
-<!-- Talep kayıt hata mesajı -->
 @if (TempData["SaveError"] != null)
 {
     <div class="alert alert-danger text-center m-0">
@@ -45,7 +36,6 @@
     </div>
 }
 
-<!-- Login hatası varsa (sadece login olmayan kullanıcı için) -->
 @if (!kullaniciLoginMi && TempData["LoginError"] != null)
 {
     <div class="alert alert-danger text-center m-0">
@@ -56,8 +46,6 @@
 <div class="hero-section d-flex align-items-center">
     <div class="container">
         <div class="row align-items-center">
-
-            <!-- SOL TARAF: Tanıtım + Talep Oluştur -->
             <div class="col-lg-7">
                 <h1 class="display-4 fw-bold mb-3">
                     Mubea <span class="text-primary">@Localizer["PurchasingRequestPortal"]</span>
@@ -73,10 +61,11 @@
                     <li>✅ @Localizer["Feature3"]</li>
                     <li>📂 @Localizer["Feature4"]</li>
                 </ul>
+
                 @if (kullaniciLoginMi)
                 {
-                    <!-- Login olmuş kullanıcı için buton -->
-                    <a asp-controller="Talep" asp-action="Create" class="btn btn-success btn-lg px-4">
+                    <a asp-controller="Talep" asp-action="Create"
+                       class="btn btn-success btn-lg px-4">
                         @Localizer["CreateRequest"]
                     </a>
                 }
@@ -88,7 +77,6 @@
                 }
             </div>
 
-            <!-- SAĞ TARAF: LOGIN FORMU (sadece login olunmadıysa) -->
             @if (!kullaniciLoginMi)
             {
                 <div class="col-lg-5 mt-4 mt-lg-0">
@@ -106,13 +94,15 @@
                                 <input type="password" name="password" class="form-control" required />
                             </div>
 
-                            <button type="submit" class="btn btn-primary w-100">@Localizer["Login"]</button>
+                            <button type="submit" class="btn btn-primary w-100">
+                                @Localizer["Login"]
+                            </button>
                         </form>
 
                         <hr class="my-4" />
 
                         <div class="small text-muted">
-                            Giriş yaparken sorun yaşıyorsanız lütfen Mubea IT departmanı ile iletişime geçin.
+                            @Localizer["LoginHelp"]
                         </div>
                     </div>
                 </div>

@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Localization;
+﻿using System.Globalization;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Options;
-using System.Globalization;
+using MubeaSatinalmaPortal.Resources; // ← BU SATIRI EKLEYİN
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,9 +15,12 @@ builder.Services.AddLocalization(options =>
 });
 
 builder.Services.AddControllersWithViews()
-    .AddViewLocalization()
-    .AddDataAnnotationsLocalization();
-
+    .AddViewLocalization(Microsoft.AspNetCore.Mvc.Razor.LanguageViewLocationExpanderFormat.Suffix)
+    .AddDataAnnotationsLocalization(options =>
+    {
+        options.DataAnnotationLocalizerProvider = (type, factory) =>
+            factory.Create(typeof(SharedResources));
+    });
 var supportedCultures = new[]
 {
     new CultureInfo("tr-TR"),

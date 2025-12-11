@@ -558,4 +558,19 @@
   <data name="NoDetailLinesForRequest" xml:space="preserve">
     <value>There are no detail lines for this request.</value>
   </data>
+  <data name="AnnouncementScreen" xml:space="preserve">
+    <value>Announcement Screen</value>
+  </data>
+  <data name="WorkSafety" xml:space="preserve">
+    <value>Work Safety</value>
+  </data>
+  <data name="UnauthorizedAccess" xml:space="preserve">
+    <value>You do not have permission to view this page. Please contact your system administrator.</value>
+  </data>
+  <data name="NoDepartmentInfo" xml:space="preserve">
+    <value>Your department information is not defined in the system. Please contact your system administrator.</value>
+  </data>
+  <data name="LoginHelp" xml:space="preserve">
+    <value>If you are having trouble logging in, please contact the Mubea IT department.</value>
+  </data>
 </root>

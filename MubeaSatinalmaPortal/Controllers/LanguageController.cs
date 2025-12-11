@@ -21,7 +21,7 @@ namespace MubeaSatinalmaPortal.Controllers
                     Expires = DateTimeOffset.UtcNow.AddDays(30),
                     IsEssential = true,
                     SameSite = SameSiteMode.Lax,
-                    Path = "/"  // ← BU SATIRI EKLEYİN
+                    Path = "/"  // ← BU SATIR EKLENDİ
                 }
             );
 

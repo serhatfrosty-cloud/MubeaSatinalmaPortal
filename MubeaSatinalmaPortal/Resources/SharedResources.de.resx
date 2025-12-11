@@ -558,4 +558,19 @@
   <data name="NoDetailLinesForRequest" xml:space="preserve">
     <value>Für diese Anfrage gibt es keine Detailpositionen.</value>
   </data>
+  <data name="AnnouncementScreen" xml:space="preserve">
+    <value>Ankündigungsbildschirm</value>
+  </data>
+  <data name="WorkSafety" xml:space="preserve">
+    <value>Arbeitssicherheit</value>
+  </data>
+  <data name="UnauthorizedAccess" xml:space="preserve">
+    <value>Sie haben keine Berechtigung, diese Seite anzuzeigen. Bitte wenden Sie sich an Ihren Systemadministrator.</value>
+  </data>
+  <data name="NoDepartmentInfo" xml:space="preserve">
+    <value>Ihre Abteilungsinformationen sind im System nicht definiert. Bitte wenden Sie sich an Ihren Systemadministrator.</value>
+  </data>
+  <data name="LoginHelp" xml:space="preserve">
+    <value>Wenn Sie Probleme beim Anmelden haben, wenden Sie sich bitte an die IT-Abteilung von Mubea.</value>
+  </data>
 </root>
