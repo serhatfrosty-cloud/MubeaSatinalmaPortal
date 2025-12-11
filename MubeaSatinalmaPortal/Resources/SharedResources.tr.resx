@@ -426,4 +426,7 @@
   <data name="LoginHelp" xml:space="preserve">
     <value>Giriş yaparken sorun yaşıyorsanız lütfen Mubea IT departmanı ile iletişime geçin.</value>
   </data>
+  <data name="PleaseFillAllRequestLines" xml:space="preserve">
+    <value>Lütfen talep satırlarındaki tüm alanları doldurun.</value>
+  </data>
 </root>

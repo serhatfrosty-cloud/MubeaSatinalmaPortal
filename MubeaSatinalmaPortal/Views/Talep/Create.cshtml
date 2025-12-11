@@ -63,6 +63,7 @@
                             <th>@Localizer["RequestType"]</th>
                             <th>@Localizer["RequirementDeadline"]</th>
                             <th>@Localizer["Requester"]</th>
+                            <th class="text-center">@Localizer["Actions"]</th>
                         </tr>
                     </thead>
 
@@ -106,6 +107,13 @@
                             <td>
                                 <input type="text" class="form-control form-control-sm uppercase" name="TalepEdenKisi" />
                             </td>
+                            <td class="text-center align-middle">
+                                <button type="button"
+                                        class="btn btn-outline-danger btn-sm talep-row-delete"
+                                        onclick="removeTalepRow(this)">
+                                    @Localizer["DeleteLine"]
+                                </button>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -135,81 +143,188 @@
 
 @section Scripts {
     <script>
-        document.addEventListener("input", function (e) {
-            if (e.target.classList.contains("uppercase")) {
-                e.target.value = e.target.value.toUpperCase();
-            }
-        });
+        // Lokalize edilen metinleri JSON olarak JS'e gömüyoruz
+         const i18n = {
+             requiredFieldsTitle: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Localizer["PleaseFillRequiredFields"].Value)),
+             fillAllRequestLines: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Localizer["PleaseFillAllRequestLines"].Value)),
+             department: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Localizer["Department"].Value)),
+             costCenter: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Localizer["CostCenter"].Value)),
+             serviceType: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Localizer["ServiceType"].Value))
+         };
 
-        function addTalepRow() {
-            var tbody = document.getElementById("talepRowsBody");
-            var count = tbody.getElementsByTagName("tr").length + 1;
+         // Büyük harf
+         document.addEventListener("input", function (e) {
+             if (e.target.classList.contains("uppercase")) {
+                 e.target.value = e.target.value.toUpperCase();
+             }
+         });
 
-            var row = document.createElement("tr");
+         function addTalepRow() {
+             var tbody = document.getElementById("talepRowsBody");
+             var count = tbody.getElementsByTagName("tr").length + 1;
 
-            row.innerHTML = `
-                <td class="text-center talep-row-index">${count}</td>
-                <td><input type="number" step="0.01" class="form-control form-control-sm" name="TalepAdet" /></td>
-                <td><input type="text" class="form-control form-control-sm uppercase" name="TalepBirim" /></td>
-                <td><input type="text" class="form-control form-control-sm uppercase" name="TalepMalzeme" /></td>
-                <td><input type="text" class="form-control form-control-sm uppercase" name="TalepGerekce" /></td>
-                <td><input type="text" class="form-control form-control-sm uppercase" name="TavsiyeTedarikci" /></td>
-                <td><input type="number" step="0.01" class="form-control form-control-sm" name="TalepFiyat" /></td>
-                <td><input type="text" class="form-control form-control-sm uppercase" name="FiyatParaBirimi" /></td>
-                <td><input type="text" class="form-control form-control-sm uppercase" name="TedarikciUrunKodu" /></td>
-                <td>
-                    <select class="form-select form-select-sm uppercase" name="TalepTipi">
-                        <option value="">@Localizer["PleaseSelect"]</option>
-                        <option value="YENİ">@Localizer["New"]</option>
-                        <option value="YEDEK">@Localizer["Spare"]</option>
-                    </select>
-                </td>
-                <td><input type="date" class="form-control form-control-sm" name="TalepTermin" /></td>
-                <td><input type="text" class="form-control form-control-sm uppercase" name="TalepEdenKisi" /></td>
-            `;
+             var row = document.createElement("tr");
 
-            tbody.appendChild(row);
-        }
+             row.innerHTML = `
+                 <td class="text-center talep-row-index">${count}</td>
+                 <td><input type="number" step="0.01" class="form-control form-control-sm" name="TalepAdet" /></td>
+                 <td><input type="text" class="form-control form-control-sm uppercase" name="TalepBirim" /></td>
+                 <td><input type="text" class="form-control form-control-sm uppercase" name="TalepMalzeme" /></td>
+                 <td><input type="text" class="form-control form-control-sm uppercase" name="TalepGerekce" /></td>
+                 <td><input type="text" class="form-control form-control-sm uppercase" name="TavsiyeTedarikci" /></td>
+                 <td><input type="number" step="0.01" class="form-control form-control-sm" name="TalepFiyat" /></td>
+                 <td><input type="text" class="form-control form-control-sm uppercase" name="FiyatParaBirimi" /></td>
+                 <td><input type="text" class="form-control form-control-sm uppercase" name="TedarikciUrunKodu" /></td>
+                 <td>
+                     <select class="form-select form-select-sm uppercase" name="TalepTipi">
+                         <option value="">@Localizer["PleaseSelect"]</option>
+                         <option value="YENİ">@Localizer["New"]</option>
+                         <option value="YEDEK">@Localizer["Spare"]</option>
+                     </select>
+                 </td>
+                 <td><input type="date" class="form-control form-control-sm" name="TalepTermin" /></td>
+                 <td><input type="text" class="form-control form-control-sm uppercase" name="TalepEdenKisi" /></td>
+                 <td class="text-center align-middle">
+                     <button type="button"
+                             class="btn btn-outline-danger btn-sm talep-row-delete"
+                             onclick="removeTalepRow(this)">
+                         @Localizer["DeleteLine"]
+                     </button>
+                 </td>
+             `;
 
-        document.addEventListener("DOMContentLoaded", function () {
-            var form = document.querySelector("form");
-            if (!form) return;
+             tbody.appendChild(row);
+         }
 
-            form.addEventListener("submit", function (e) {
-                var eksikler = [];
-                var departman = form.querySelector('select[name="DepartmanID"]');
-                var costcenter = form.querySelector('select[name="CostCenterID"]');
-                var hizmet = form.querySelector('select[name="HizmetID"]');
+         function removeTalepRow(button) {
+             var tbody = document.getElementById("talepRowsBody");
+             var rows = tbody.getElementsByTagName("tr");
 
-                [departman, costcenter, hizmet].forEach(function (el) {
-                    if (el) el.classList.remove("is-invalid");
-                });
+             // Tek satır kaldıysa sadece alanları temizle
+             if (rows.length === 1) {
+                 var inputs = rows[0].querySelectorAll("input, select");
+                 inputs.forEach(function (input) {
+                     if (input.tagName.toLowerCase() === "select") {
+                         input.selectedIndex = 0;
+                     } else {
+                         input.value = "";
+                     }
+                 });
+                 return;
+             }
 
-                if (departman && (departman.value === "" || departman.value === "0")) {
-                    eksikler.push("@Localizer["Department"]");
-                    departman.classList.add("is-invalid");
-                }
+             // Tıklanan satırı sil
+             var row = button.closest("tr");
+             if (row) {
+                 row.remove();
+             }
 
-                if (costcenter && (costcenter.value === "" || costcenter.value === "0")) {
-                    eksikler.push("@Localizer["CostCenter"]");
-                    costcenter.classList.add("is-invalid");
-                }
+             // Satır numaralarını yeniden sırala
+             var indexes = tbody.querySelectorAll(".talep-row-index");
+             indexes.forEach(function (cell, index) {
+                 cell.textContent = (index + 1).toString();
+             });
+         }
 
-                if (hizmet && (hizmet.value === "" || hizmet.value === "0")) {
-                    eksikler.push("@Localizer["ServiceType"]");
-                    hizmet.classList.add("is-invalid");
-                }
+         document.addEventListener("DOMContentLoaded", function () {
+             var form = document.querySelector("form");
+             if (!form) return;
 
-                if (eksikler.length > 0) {
-                    var msg = "@Localizer["PleaseFillRequiredFields"]:\n\n";
-                    for (var i = 0; i < eksikler.length; i++) {
-                        msg += "- " + eksikler[i] + "\n";
-                    }
-                    alert(msg);
-                    e.preventDefault();
-                    e.stopPropagation();
-                }
-            });
-        });
+             function isEmpty(value) {
+                 return value == null || value.toString().trim() === "";
+             }
+
+             form.addEventListener("submit", function (e) {
+                 var eksikler = [];
+
+                 var departman = form.querySelector('select[name="DepartmanID"]');
+                 var costcenter = form.querySelector('select[name="CostCenterID"]');
+                 var hizmet = form.querySelector('select[name="HizmetID"]');
+
+                 // Eski is-invalid'ları temizle
+                 [departman, costcenter, hizmet].forEach(function (el) {
+                     if (el) el.classList.remove("is-invalid");
+                 });
+                 document.querySelectorAll('#talepRowsBody input, #talepRowsBody select')
+                     .forEach(function (el) { el.classList.remove("is-invalid"); });
+
+                 // Üst dropdown kontrolleri
+                 if (departman && (departman.value === "" || departman.value === "0")) {
+                     eksikler.push(i18n.department);
+                     departman.classList.add("is-invalid");
+                 }
+
+                 if (costcenter && (costcenter.value === "" || costcenter.value === "0")) {
+                     eksikler.push(i18n.costCenter);
+                     costcenter.classList.add("is-invalid");
+                 }
+
+                 if (hizmet && (hizmet.value === "" || hizmet.value === "0")) {
+                     eksikler.push(i18n.serviceType);
+                     hizmet.classList.add("is-invalid");
+                 }
+
+                 // Satır detay kontrolleri
+                 var tbody = document.getElementById("talepRowsBody");
+                 var rows = tbody ? tbody.querySelectorAll("tr") : [];
+                 var anyRowError = false;
+
+                 rows.forEach(function (row) {
+                     var adet = row.querySelector('input[name="TalepAdet"]');
+                     var birim = row.querySelector('input[name="TalepBirim"]');
+                     var malzeme = row.querySelector('input[name="TalepMalzeme"]');
+                     var gerekce = row.querySelector('input[name="TalepGerekce"]');
+                     var tedarikci = row.querySelector('input[name="TavsiyeTedarikci"]');
+                     var fiyat = row.querySelector('input[name="TalepFiyat"]');
+                     var parabirimi = row.querySelector('input[name="FiyatParaBirimi"]');
+                     var urunkodu = row.querySelector('input[name="TedarikciUrunKodu"]');
+                     var talepTipi = row.querySelector('select[name="TalepTipi"]');
+                     var termin = row.querySelector('input[name="TalepTermin"]');
+                     var talepEden = row.querySelector('input[name="TalepEdenKisi"]');
+
+                     function markInvalid(el) {
+                         if (!el) return;
+                         el.classList.add("is-invalid");
+                         anyRowError = true;
+                     }
+
+                     // Adet: boş veya 0 olmasın
+                     if (!adet || isEmpty(adet.value) || isNaN(parseFloat(adet.value)) || parseFloat(adet.value) <= 0) {
+                         markInvalid(adet);
+                     }
+
+                     if (!birim || isEmpty(birim.value)) markInvalid(birim);
+                     if (!malzeme || isEmpty(malzeme.value)) markInvalid(malzeme);
+                     if (!gerekce || isEmpty(gerekce.value)) markInvalid(gerekce);
+                     if (!tedarikci || isEmpty(tedarikci.value)) markInvalid(tedarikci);
+
+                     // Fiyat: boş veya 0 olmasın
+                     if (!fiyat || isEmpty(fiyat.value) || isNaN(parseFloat(fiyat.value)) || parseFloat(fiyat.value) <= 0) {
+                         markInvalid(fiyat);
+                     }
+
+                     if (!parabirimi || isEmpty(parabirimi.value)) markInvalid(parabirimi);
+                     if (!urunkodu || isEmpty(urunkodu.value)) markInvalid(urunkodu);
+                     if (!talepTipi || isEmpty(talepTipi.value)) markInvalid(talepTipi);
+                     if (!termin || isEmpty(termin.value)) markInvalid(termin);
+                     if (!talepEden || isEmpty(talepEden.value)) markInvalid(talepEden);
+                 });
+
+                 if (anyRowError) {
+                     eksikler.push(i18n.fillAllRequestLines);
+                 }
+
+                 if (eksikler.length > 0) {
+                     let msg = i18n.requiredFieldsTitle + ":\n\n";
+                     eksikler.forEach(function (item) {
+                         msg += "- " + item + "\n";
+                     });
+
+                     alert(msg);
+                     e.preventDefault();
+                     e.stopPropagation();
+                 }
+             });
+         });
     </script>
 }

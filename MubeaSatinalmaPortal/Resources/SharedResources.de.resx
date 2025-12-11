@@ -426,4 +426,7 @@
   <data name="LoginHelp" xml:space="preserve">
     <value>Wenn Sie Probleme beim Anmelden haben, wenden Sie sich bitte an die IT-Abteilung von Mubea.</value>
   </data>
+  <data name="PleaseFillAllRequestLines" xml:space="preserve">
+    <value>uygun bir Almanca karşılık 🙂</value>
+  </data>
 </root>
